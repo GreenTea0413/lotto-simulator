@@ -1,85 +1,93 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
-/* 🎨 밝은 테마 */
 :root {
-  --background: #fafafa;
-  --foreground: #2a2a2a;
-  --card: #ffffff;
-  --card-foreground: #2a2a2a;
-  --popover: #ffffff;
-  --popover-foreground: #2a2a2a;
-  --primary: #3a3a3a;
-  --primary-foreground: #f9f9f9;
-  --secondary: #f2f2f2;
-  --secondary-foreground: #3a3a3a;
-  --muted: #ececec;
-  --muted-foreground: #7a7a7a;
-  --accent: #e6e6e6;
-  --accent-foreground: #3a3a3a;
-  --destructive: #d94c3d;
-  --destructive-foreground: #ffffff;
-  --border: #d9d9d9;
-  --input: #ebebeb;
-  --ring: #999999;
-  --chart-1: #cc7553;
-  --chart-2: #60a5fa;
-  --chart-3: #667eea;
-  --chart-4: #fbbf24;
-  --chart-5: #f59e0b;
-  --radius: 0.25rem;
-  --sidebar: #f8f8f8;
-  --sidebar-foreground: #222222;
+  --background: #FFFFFF;
+  --foreground: #252525;
+  --card: #FFFFFF;
+  --card-foreground: #252525;
+  --popover: #FFFFFF;
+  --popover-foreground: #252525;
+
+  --primary: #333333;
+  --primary-foreground: #F5F5F5;
+  --secondary: #F0F0F0;
+  --secondary-foreground: #333333;
+
+  --muted: #EEEEEE;
+  --muted-foreground: #888888;
+  --accent: #EAEAEA;
+  --accent-foreground: #333333;
+
+  --destructive: #E25858;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #E5E5E5;
+  --input: #E5E5E5;
+  --ring: #BBBBBB;
+
+  --chart-1: #F4BB68;
+  --chart-2: #57A1E5;
+  --chart-3: #7C83FD;
+  --chart-4: #F6A5C0;
+  --chart-5: #FFD166;
+
+  --sidebar: #F9F9F9;
+  --sidebar-foreground: #252525;
   --sidebar-primary: #333333;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f2f2f2;
+  --sidebar-primary-foreground: #F9F9F9;
+  --sidebar-accent: #EAEAEA;
   --sidebar-accent-foreground: #333333;
-  --sidebar-border: #dddddd;
-  --sidebar-ring: #aaaaaa;
+  --sidebar-border: #E5E5E5;
+  --sidebar-ring: #BBBBBB;
 }
 
-/* 🌙 어두운 테마 */
 .dark {
-  --background: #1c1c1c;
-  --foreground: #f5f5f5;
-  --card: #1f1f1f;
-  --card-foreground: #f5f5f5;
-  --popover: #1f1f1f;
-  --popover-foreground: #f5f5f5;
-  --primary: #f5f5f5;
+  --background: #252525;
+  --foreground: #F5F5F5;
+  --card: #252525;
+  --card-foreground: #F5F5F5;
+  --popover: #252525;
+  --popover-foreground: #F5F5F5;
+
+  --primary: #F5F5F5;
   --primary-foreground: #333333;
-  --secondary: #2c2c2c;
-  --secondary-foreground: #f5f5f5;
-  --muted: #2c2c2c;
-  --muted-foreground: #a0a0a0;
-  --accent: #2c2c2c;
-  --accent-foreground: #f5f5f5;
-  --destructive: #a74435;
-  --destructive-foreground: #f5f5f5;
-  --border: #2c2c2c;
-  --input: #2c2c2c;
-  --ring: #606060;
-  --chart-1: #496dd9;
-  --chart-2: #83c5be;
-  --chart-3: #f59e0b;
-  --chart-4: #7f94f8;
-  --chart-5: #eab308;
-  --sidebar: #2a2a2a;
-  --sidebar-foreground: #f5f5f5;
-  --sidebar-primary: #496dd9;
-  --sidebar-primary-foreground: #f5f5f5;
-  --sidebar-accent: #2c2c2c;
-  --sidebar-accent-foreground: #f5f5f5;
-  --sidebar-border: #2c2c2c;
-  --sidebar-ring: #606060;
+  --secondary: #444444;
+  --secondary-foreground: #F5F5F5;
+
+  --muted: #444444;
+  --muted-foreground: #999999;
+  --accent: #444444;
+  --accent-foreground: #F5F5F5;
+
+  --destructive: #AA3333;
+  --destructive-foreground: #F5F5F5;
+
+  --border: #444444;
+  --input: #444444;
+  --ring: #666666;
+
+  --chart-1: #A5D8FF;
+  --chart-2: #FFD6A5;
+  --chart-3: #E9A8F2;
+  --chart-4: #FFADAD;
+  --chart-5: #FFF6A5;
+
+  --sidebar: #333333;
+  --sidebar-foreground: #F5F5F5;
+  --sidebar-primary: #A5D8FF;
+  --sidebar-primary-foreground: #F5F5F5;
+  --sidebar-accent: #444444;
+  --sidebar-accent-foreground: #F5F5F5;
+  --sidebar-border: #444444;
+  --sidebar-ring: #666666;
 }
 
-/* 공통 테마 설정 */
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback";
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-sans: 'Geist', 'Geist Fallback';
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -127,30 +135,6 @@
   }
 }
 
-/* 🎫 로또 영수증 점선 효과 */
-@layer utilities {
-  .receipt-border {
-    border-style: dashed;
-    border-width: 1px;
-  }
-
-  .receipt-dots::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-image: repeating-linear-gradient(
-      to right,
-      #b0b0b0 0,
-      #b0b0b0 4px,
-      transparent 4px,
-      transparent 8px
-    );
-  }
-}
-
-/* 스크롤바 숨김 */
 body {
   overflow: auto;
   scrollbar-width: none; /* Firefox */

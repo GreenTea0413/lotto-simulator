@@ -1,82 +1,82 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #252525;
+  --background: #f9f9f9;
+  --foreground: #333333;
   --card: #ffffff;
-  --card-foreground: #252525;
+  --card-foreground: #333333;
   --popover: #ffffff;
-  --popover-foreground: #252525;
+  --popover-foreground: #333333;
   --primary: #444444;
-  --primary-foreground: #fcfcfc;
-  --secondary: #f7f7f7;
+  --primary-foreground: #f9f9f9;
+  --secondary: #f2f2f2;
   --secondary-foreground: #444444;
-  --muted: #f7f7f7;
-  --muted-foreground: #8c8c8c;
-  --accent: #f7f7f7;
+  --muted: #ededed;
+  --muted-foreground: #808080;
+  --accent: #e6e6e6;
   --accent-foreground: #444444;
-  --destructive: #d94c3d;
-  --destructive-foreground: #d94c3d;
-  --border: #ebebeb;
+  --destructive: #d94f4f;
+  --destructive-foreground: #ffffff;
+  --border: #d9d9d9;
   --input: #ebebeb;
-  --ring: #b5b5b5;
-  --chart-1: #cc7553;
-  --chart-2: #60a5fa;
-  --chart-3: #667eea;
-  --chart-4: #fbbf24;
-  --chart-5: #f59e0b;
-  --radius: 0.625rem;
+  --ring: #999999;
+  --chart-1: #e7b84c;
+  --chart-2: #66aaff;
+  --chart-3: #5f73b1;
+  --chart-4: #ffcb00;
+  --chart-5: #ffaa00;
+  --radius: 0.25rem;
   --sidebar: #fcfcfc;
-  --sidebar-foreground: #252525;
+  --sidebar-foreground: #262626;
   --sidebar-primary: #444444;
-  --sidebar-primary-foreground: #fcfcfc;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f7f7f7;
-  --sidebar-accent-foreground: #444444;
+  --sidebar-accent-foreground: #262626;
   --sidebar-border: #ebebeb;
-  --sidebar-ring: #b5b5b5;
+  --sidebar-ring: #b4b4b4;
 }
 
 .dark {
-  --background: #252525;
-  --foreground: #fcfcfc;
-  --card: #252525;
-  --card-foreground: #fcfcfc;
-  --popover: #252525;
-  --popover-foreground: #fcfcfc;
-  --primary: #fcfcfc;
-  --primary-foreground: #444444;
+  --background: #262626;
+  --foreground: #ffffff;
+  --card: #262626;
+  --card-foreground: #ffffff;
+  --popover: #262626;
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #333333;
   --secondary: #444444;
-  --secondary-foreground: #fcfcfc;
+  --secondary-foreground: #ffffff;
   --muted: #444444;
-  --muted-foreground: #b5b5b5;
+  --muted-foreground: #b4b4b4;
   --accent: #444444;
-  --accent-foreground: #fcfcfc;
-  --destructive: #ab4a3a;
-  --destructive-foreground: #dd6e5c;
+  --accent-foreground: #ffffff;
+  --destructive: #993333;
+  --destructive-foreground: #ffcccc;
   --border: #444444;
   --input: #444444;
   --ring: #707070;
-  --chart-1: #496dd9;
-  --chart-2: #83c5be;
-  --chart-3: #f59e0b;
-  --chart-4: #7f94f8;
-  --chart-5: #eab308;
-  --sidebar: #444444;
-  --sidebar-foreground: #fcfcfc;
-  --sidebar-primary: #496dd9;
-  --sidebar-primary-foreground: #fcfcfc;
+  --chart-1: #7a9dfb;
+  --chart-2: #ffd666;
+  --chart-3: #ffaa00;
+  --chart-4: #a58bff;
+  --chart-5: #c27d4f;
+  --sidebar: #333333;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #7a9dfb;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #444444;
-  --sidebar-accent-foreground: #fcfcfc;
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #444444;
   --sidebar-ring: #707070;
 }
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback';
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --font-sans: "Geist", "Geist Fallback";
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -124,12 +124,25 @@
   }
 }
 
-body {
-  overflow: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE, Edge */
-}
+/* 로또 영수증 스타일의 점선 효과 */
+@layer utilities {
+  .receipt-border {
+    border-style: dashed;
+    border-width: 1px;
+  }
 
-body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  .receipt-dots::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-image: repeating-linear-gradient(
+      to right,
+      #b3b3b3 0,
+      #b3b3b3 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  }
 }

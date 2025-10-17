@@ -2,7 +2,7 @@
 
 import { LottoBall } from "./lotto-ball"
 import { useRef } from "react"
-import html2canvas from "html2canvas"
+import html2canvas from "html2canvas-pro"
 import { Download, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -26,15 +26,24 @@ export function LottoReceipt({ lottoSets }: LottoReceiptProps) {
     hour12: false,
   })
 
-  const captureImageBlob = async () => {
+  // ✅ 이미지 캡처 함수
+  const captureImageBlob = async (): Promise<Blob | null> => {
     if (!receiptRef.current) return null
+
     const canvas = await html2canvas(receiptRef.current, {
       backgroundColor: "#ffffff",
-      scale: 2,
+      scale: window.devicePixelRatio || 2,
+      useCORS: true,
+      ignoreElements: (el) =>
+        getComputedStyle(el).opacity === "0" || getComputedStyle(el).visibility === "hidden",
     })
-    return new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"))
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => resolve(blob), "image/png")
+    })
   }
 
+  // ✅ 저장
   const handleDownload = async () => {
     const blob = await captureImageBlob()
     if (!blob) return
@@ -47,9 +56,11 @@ export function LottoReceipt({ lottoSets }: LottoReceiptProps) {
     URL.revokeObjectURL(url)
   }
 
+  // ✅ 공유
   const handleShare = async () => {
     const blob = await captureImageBlob()
     if (!blob) return
+
     const file = new File([blob], "lotto-receipt.png", { type: "image/png" })
 
     if (navigator.canShare?.({ files: [file] })) {
@@ -108,12 +119,12 @@ export function LottoReceipt({ lottoSets }: LottoReceiptProps) {
         {/* 푸터 */}
         <div className="px-4 py-3 border-t border-dashed border-border bg-muted/30">
           <div className="text-center space-y-1">
-            <div className="text-xs font-mono text-muted-foreground">총 5게임 | 금액 5,000원</div>
+            <div className="text-xs font-mono text-muted-foreground">총 {lottoSets.length}게임 | 금액 {lottoSets.length * 1000}원</div>
             <div className="text-[10px] text-muted-foreground">행운을 빕니다!</div>
           </div>
         </div>
 
-        {/* 영수증 하단 톱니 효과 */}
+        {/* 하단 톱니 효과 */}
         <div className="h-3 bg-background relative">
           <div className="absolute inset-0 flex">
             {Array.from({ length: 20 }).map((_, i) => (

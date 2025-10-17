@@ -1,6 +1,6 @@
 {
   "name": "로또 시뮬레이터",
-  "short_name": "LottoSim",
+  "short_name": "로또심",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

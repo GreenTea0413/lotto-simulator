@@ -32,8 +32,8 @@ export default function Home() {
     <main className="min-h-screen bg-background py-8 px-4">
       <div className="max-w-md mx-auto space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-foreground font-mono">로또 육사오</h1>
-          <p className="text-sm text-muted-foreground">행운의 번호를 생성해보세요</p>
+          <h1 className="text-2xl font-bold text-foreground font-mono">로또 6/45</h1>
+          <p className="text-sm text-muted-foreground">1등만이 답이다</p>
         </div>
 
         <Button

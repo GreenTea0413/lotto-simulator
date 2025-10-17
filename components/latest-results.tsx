@@ -63,7 +63,7 @@ export function LatestResults() {
       </div>
 
       <div className="pt-2 border-t border-dashed border-border">
-        <p className="text-[10px] text-center text-muted-foreground leading-relaxed">위 번호와 비교해보세요!</p>
+        <p className="text-[10px] text-center text-muted-foreground leading-relaxed">당신의 번호가 올라올 차례!</p>
       </div>
     </Card>
   )

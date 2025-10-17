@@ -7,9 +7,14 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: '로또 시뮬레이션',
+  description: '1등만이 답이다.',
+  generator: 'Next.js',
+  icons: {
+    icon: '/icon-192x192.png',
+    apple: '/icon-192x192.png',  
+  },
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({

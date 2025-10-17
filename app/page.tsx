@@ -27,15 +27,6 @@ export default function Home() {
       setIsGenerating(false)
     }, 500)
   }
-  const all = [...document.querySelectorAll('*')];
-  for (const el of all) {
-    const style = getComputedStyle(el);
-    for (const key of style) {
-      if (style.getPropertyValue(key).includes('oklch')) {
-        console.log('⚠️ Found oklch in', el, key, style.getPropertyValue(key));
-      }
-    }
-  }
   return (
     <main className="min-h-screen bg-background py-8 px-4">
       <div className="max-w-md mx-auto space-y-6">

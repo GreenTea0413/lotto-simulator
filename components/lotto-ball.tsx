@@ -32,8 +32,20 @@ export function LottoBall({ number }: LottoBallProps) {
 
   return (
     <div
-      className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shadow-sm"
-      style={getStyle(number)}
+      style={{
+        ...getStyle(number),
+        width: "36px",
+        height: "36px",
+        borderRadius: "50%",
+        textAlign: "center",
+        lineHeight: "36px", 
+        fontWeight: "bold",
+        fontSize: "14px",
+        fontFamily: "system-ui, sans-serif", 
+        boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+        position: "relative",
+        top: "-0.5px",
+      }}
     >
       {number}
     </div>

@@ -29,6 +29,7 @@ function LottoBall({ number }: { number: number }) {
         justifyContent: "center",
         fontWeight: "bold",
         fontSize: "14px",
+        lineHeight: "1", // ✅ 숫자 수직 가운데 정렬
         boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
         backgroundColor: bg,
         color: text,
@@ -90,18 +91,19 @@ export function LottoReceipt({ lottoSets }: LottoReceiptProps) {
 
     const file = new File([blob], "lotto-receipt.png", { type: "image/png" })
 
-    if (navigator.canShare?.({ files: [file] })) {
-      try {
+    try {
+      if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
           title: "나의 로또 번호",
-          text: "이번 주 대박 번호!",
           files: [file],
         })
-      } catch (err) {
-        console.error("공유 취소 또는 실패", err)
+        alert("공유 완료! 링크: https://lotto-simulator-brown.vercel.app/")
+      } else {
+        alert("이 기기에서는 이미지 공유를 지원하지 않습니다.")
       }
-    } else {
-      alert("이 기기에서는 공유 기능을 지원하지 않습니다.")
+    } catch (err) {
+      console.error("공유 실패", err)
+      alert("공유 중 오류 발생")
     }
   }
 
@@ -126,28 +128,100 @@ export function LottoReceipt({ lottoSets }: LottoReceiptProps) {
             textAlign: "center",
           }}
         >
-          <div style={{ fontFamily: "monospace", fontSize: "12px", letterSpacing: "1px" }}>로또 6/45</div>
-          <div style={{ fontWeight: "bold", fontSize: "18px", marginTop: "4px" }}>1등 당첨 복권!</div>
+          <div
+            style={{
+              fontFamily: "monospace",
+              fontSize: "12px",
+              letterSpacing: "1px",
+            }}
+          >
+            로또 6/45
+          </div>
+          <div
+            style={{
+              fontWeight: "bold",
+              fontSize: "18px",
+              marginTop: "4px",
+            }}
+          >
+            1등 당첨 복권!
+          </div>
         </div>
 
         {/* 정보 */}
         <div style={{ padding: "8px 16px", borderBottom: "1px dashed #ccc" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "monospace", fontSize: "12px", color: "#6B7280" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontFamily: "monospace",
+              fontSize: "12px",
+              color: "#6B7280",
+            }}
+          >
             <span>{formattedDate}</span>
             <span>{formattedTime}</span>
           </div>
         </div>
 
         {/* 번호 */}
-        <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div
+          style={{
+            padding: "16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
           {lottoSets.map((numbers, index) => (
-            <div key={index} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontFamily: "monospace", fontSize: "12px", color: "#6B7280" }}>{String.fromCharCode(65 + index)}</span>
-                <div style={{ flex: 1, margin: "0 12px", borderTop: "1px dotted #ccc" }}></div>
-                <span style={{ fontFamily: "monospace", fontSize: "12px", color: "#6B7280" }}>자동</span>
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "monospace",
+                    fontSize: "12px",
+                    color: "#6B7280",
+                  }}
+                >
+                  {String.fromCharCode(65 + index)}
+                </span>
+                <div
+                  style={{
+                    flex: 1,
+                    margin: "0 12px",
+                    borderTop: "1px dotted #ccc",
+                  }}
+                ></div>
+                <span
+                  style={{
+                    fontFamily: "monospace",
+                    fontSize: "12px",
+                    color: "#6B7280",
+                  }}
+                >
+                  자동
+                </span>
               </div>
-              <div style={{ display: "flex", justifyContent: "center", gap: "8px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "8px",
+                }}
+              >
                 {numbers.map((number, numIndex) => (
                   <LottoBall key={numIndex} number={number} />
                 ))}
@@ -157,52 +231,68 @@ export function LottoReceipt({ lottoSets }: LottoReceiptProps) {
         </div>
 
         {/* 푸터 */}
-        <div style={{ padding: "12px 16px", borderTop: "1px dashed #ccc", backgroundColor: "#f3f4f6", textAlign: "center" }}>
-          <div style={{ fontFamily: "monospace", fontSize: "12px", color: "#6B7280" }}>
+        <div
+          style={{
+            padding: "12px 16px",
+            borderTop: "1px dashed #ccc",
+            backgroundColor: "#f3f4f6",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "monospace",
+              fontSize: "12px",
+              color: "#6B7280",
+            }}
+          >
             총 {lottoSets.length}게임 | 금액 {lottoSets.length * 1000}원
           </div>
-          <div style={{ fontSize: "10px", color: "#6B7280" }}>행운을 빕니다!</div>
+          <div style={{ fontSize: "10px", color: "#6B7280" }}>
+            행운을 빕니다!
+          </div>
         </div>
       </div>
 
+      {/* 버튼 영역 */}
       <div style={{ display: "flex", gap: "12px" }}>
         <button
-            onClick={handleDownload}
-            style={{
-              flex: 1,
-              padding: "12px",
-              border: "1px solid #ccc",
-              borderRadius: "6px",
-              fontWeight: 600,
-              backgroundColor: "transparent",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center", // 가운데 정렬
-              gap: 8, // 아이콘과 텍스트 간격
-            }}
-          >
-            <Download style={{ width: 16, height: 16 }} />
-            이미지 저장
-          </button>
+          onClick={handleDownload}
+          style={{
+            flex: 1,
+            padding: "12px",
+            border: "1px solid #ccc",
+            borderRadius: "6px",
+            fontWeight: 600,
+            backgroundColor: "transparent",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+          }}
+        >
+          <Download style={{ width: 16, height: 16 }} />
+          이미지 저장
+        </button>
 
-          <button
-            onClick={handleShare}
-            style={{
-              flex: 1,
-              padding: "12px",
-              borderRadius: "6px",
-              fontWeight: 600,
-              backgroundColor: "#000000",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-            }}
-          >
-            <Share2 style={{ width: 16, height: 16 }} />
-            공유하기
-          </button>
+        <button
+          onClick={handleShare}
+          style={{
+            flex: 1,
+            padding: "12px",
+            borderRadius: "6px",
+            fontWeight: 600,
+            backgroundColor: "#000000",
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+          }}
+        >
+          <Share2 style={{ width: 16, height: 16 }} />
+          공유하기
+        </button>
       </div>
     </div>
   )

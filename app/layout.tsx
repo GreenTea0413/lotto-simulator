@@ -10,9 +10,9 @@ export const metadata: Metadata = {
   title: '로또 시뮬레이션 - 당신의 행운을 예측하세요!',
   description: '이름이나 생년월일로 로또 번호를 추천받고, 재미로 즐겨보세요. 매주 바뀌는 운세와 숫자 추천!',
   generator: 'Next.js',
-  keywords: ['로또', '로또 번호', '로또 시뮬레이션', '랜덤 추천', '행운의 숫자'],
-  authors: [{ name: '보성 김' }],
-  creator: '보성 김',
+  keywords: ['로또', '로또 번호', '로또 시뮬레이션', '랜덤 추천', '행운의 숫자', '로또심', '로또 시뮬'],
+  authors: [{ name: '그린티' }],
+  creator: '그린티',
   icons: {
     icon: '/icon-192x192.png',
     apple: '/icon-192x192.png',

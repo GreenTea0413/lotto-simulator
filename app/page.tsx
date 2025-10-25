@@ -5,21 +5,23 @@ import { Button } from "@/components/ui/button"
 import { LottoReceipt } from "@/components/lotto-receipt"
 import { LatestResults } from "@/components/latest-results"
 import KakaoMap from "@/components/kakao-map"
+import NearbySpots from "@/components/nearby-spots"
 import { luckySpots } from "@/data/luckySpots"
 import { getDistance } from "@/lib/getDistance"
 import { useKakaoLoader } from "@/hooks/useKakaoLoader"
+import { MapPin } from "lucide-react"
 
 export default function Home() {
   const [lottoSets, setLottoSets] = useState<number[][]>([])
   const [isGenerating, setIsGenerating] = useState(false)
-
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [nearbyPlaces, setNearbyPlaces] = useState(luckySpots)
   const loaded = useKakaoLoader()
-  
+
   const generateLottoNumbers = () => {
     setIsGenerating(true)
 
+    // 애니메이션 효과를 위한 딜레이
     setTimeout(() => {
       const newSets: number[][] = []
 
@@ -49,14 +51,14 @@ export default function Home() {
 
         const filtered = luckySpots.filter((spot) => {
           const dist = getDistance(latitude, longitude, spot.lat, spot.lng)
-          return dist <= 2 // km
+          return dist <= 20 // 20km 이내
         })
 
-        setNearbyPlaces(filtered)
+        setNearbyPlaces(filtered.length > 0 ? filtered : luckySpots)
       },
       () => {
         alert("위치 권한을 허용해주세요.")
-      }
+      },
     )
   }
 
@@ -81,15 +83,51 @@ export default function Home() {
 
         <LatestResults />
 
-        <div className="space-y-4 pt-8">
-          <Button onClick={handleFindNearby} className="w-full">
-            주변 명소 찾기
+        <div style={{ marginTop: "48px", paddingTop: "24px", borderTop: "2px dashed #d1d5db" }}>
+          <Button
+            onClick={handleFindNearby}
+            className="w-full h-12 text-base font-mono"
+            size="lg"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+            }}
+          >
+            <MapPin size={20} />
+            주변 명당 찾기
           </Button>
 
-          {loaded ? (
-            <KakaoMap userLocation={userLocation} places={nearbyPlaces} />
+          {loaded && userLocation ? (
+            <div style={{ marginTop: "24px", display: "flex", flexDirection: "column", gap: "20px" }}>
+              <KakaoMap userLocation={userLocation} places={nearbyPlaces} />
+              <NearbySpots userLocation={userLocation} />
+            </div>
+          ) : loaded && !userLocation ? (
+            <p
+              style={{
+                textAlign: "center",
+                marginTop: "16px",
+                color: "#6b7280",
+                fontFamily: "'Courier New', monospace",
+                fontSize: "14px",
+              }}
+            >
+              위 버튼을 눌러 주변 명당을 찾아보세요
+            </p>
           ) : (
-            <p className="text-center">지도를 불러오는 중입니다...</p>
+            <p
+              style={{
+                textAlign: "center",
+                marginTop: "16px",
+                color: "#6b7280",
+                fontFamily: "'Courier New', monospace",
+                fontSize: "14px",
+              }}
+            >
+              지도를 불러오는 중입니다...
+            </p>
           )}
         </div>
       </div>

@@ -8,28 +8,20 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: '로또 시뮬레이션 - 당신의 행운을 예측하세요!',
-  description: '이름이나 생년월일로 로또 번호를 추천받고, 재미로 즐겨보세요. 매주 바뀌는 운세와 숫자 추천!',
-  generator: 'Next.js',
-  keywords: ['로또', '로또 번호', '로또 시뮬레이션', '랜덤 추천', '행운의 숫자', '로또심', '로또 시뮬'],
-  authors: [{ name: '그린티' }],
-  creator: '그린티',
-  icons: {
-    icon: '/icon-192x192.png',
-    apple: '/icon-192x192.png',
-  },
-  manifest: '/manifest.json',
-  themeColor: '#ffffff',
+  description: '이름이나 생년월일로 로또 번호를 추천받고, 재미로 즐겨보세요.',
+  metadataBase: new URL('https://lotto-simm.vercel.app'), 
+  keywords: ['로또', '번호 추천', '행운', '시뮬레이터'],
   openGraph: {
-    title: '로또 시뮬레이션 - 당신의 행운을 예측하세요!',
-    description: '이름이나 생년월일로 로또 번호를 추천받고, 재미로 즐겨보세요.',
-    url: 'https://lotto-simm.vercel.app', // ← 실제 배포 주소
-    siteName: '로또 시뮬레이션',
+    title: '로또 시뮬레이션',
+    description: '랜덤 추천, 위치 기반 명소와 함께하는 행운 테스트',
+    url: 'https://lotto-simm.vercel.app',
+    siteName: '로또 시뮬레이터',
     images: [
       {
-        url: '/icon-192x192.png', // 1200x630 추천
-        width: 1200,
-        height: 630,
-        alt: '로또 시뮬레이션 대표 이미지',
+        url: '/icon-512x512.png',
+        width: 512,
+        height: 512,
+        alt: '로또 시뮬레이터 대표 이미지',
       },
     ],
     type: 'website',
@@ -37,8 +29,12 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    nocache: false,
   },
+  icons: {
+    icon: '/icon-192x192.png',
+    apple: '/icon-192x192.png',
+  },
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({
@@ -49,6 +45,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <script
+          type="text/javascript"
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=services`}
+        ></script>
         <meta name="google-site-verification" content="lcnJKA7vmJdAeeH_r_Sj_uWnJt-qj0_kyd5Om9o3imA" />
       </head>
       <body className={`font-sans antialiased`}>

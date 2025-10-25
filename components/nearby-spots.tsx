@@ -3,6 +3,7 @@
 import { luckySpots } from "@/data/luckySpots"
 import { getDistance } from "@/lib/getDistance"
 import { MapPin, Navigation } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 type Props = {
   userLocation: { lat: number; lng: number } | null
@@ -33,7 +34,7 @@ export default function NearbySpots({ userLocation }: Props) {
           gap: "8px",
         }}
       >
-        <MapPin size={20} style={{ color: "#ef4444" }} />
+        <MapPin size={20} style={{ color: "#22c55e" }} />
         가까운 명당 TOP 3
       </h2>
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -52,7 +53,7 @@ export default function NearbySpots({ userLocation }: Props) {
               transition: "all 0.2s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#ef4444"
+              e.currentTarget.style.borderColor = "#22c55e"
               e.currentTarget.style.transform = "translateY(-2px)"
               e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)"
             }}
@@ -84,34 +85,22 @@ export default function NearbySpots({ userLocation }: Props) {
                 약 {spot.distance.toFixed(2)} km
               </p>
             </div>
-            <a
-              href={`https://map.kakao.com/link/to/${encodeURIComponent(spot.name)},${spot.lat},${spot.lng}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Button
+              size="sm"
+              onClick={() => {
+                window.open(
+                  `https://map.kakao.com/link/to/${encodeURIComponent(spot.name)},${spot.lat},${spot.lng}`,
+                  "_blank",
+                  "noopener,noreferrer",
+                )
+              }}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "8px 16px",
-                background: "#3b82f6",
-                color: "white",
-                borderRadius: "6px",
-                fontSize: "13px",
-                fontWeight: "600",
-                textDecoration: "none",
                 fontFamily: "'Courier New', monospace",
-                transition: "background 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#2563eb"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#3b82f6"
               }}
             >
               <Navigation size={14} />
               길찾기
-            </a>
+            </Button>
           </div>
         ))}
       </div>

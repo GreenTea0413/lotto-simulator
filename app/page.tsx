@@ -21,7 +21,6 @@ export default function Home() {
   const generateLottoNumbers = () => {
     setIsGenerating(true)
 
-    // 애니메이션 효과를 위한 딜레이
     setTimeout(() => {
       const newSets: number[][] = []
 
@@ -51,7 +50,7 @@ export default function Home() {
 
         const filtered = luckySpots.filter((spot) => {
           const dist = getDistance(latitude, longitude, spot.lat, spot.lng)
-          return dist <= 20 // 20km 이내
+          return dist <= 20 
         })
 
         setNearbyPlaces(filtered.length > 0 ? filtered : luckySpots)

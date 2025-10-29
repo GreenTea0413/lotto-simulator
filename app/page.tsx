@@ -8,15 +8,16 @@ import KakaoMap from "@/components/kakao-map"
 import NearbySpots from "@/components/nearby-spots"
 import { luckySpots } from "@/data/luckySpots"
 import { getDistance } from "@/lib/getDistance"
-import { useKakaoLoader } from "@/hooks/useKakaoLoader"
+import { loadKakaoMapScript } from "@/hooks/useKakaoLoader"
 import { MapPin } from "lucide-react"
+
 
 export default function Home() {
   const [lottoSets, setLottoSets] = useState<number[][]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [nearbyPlaces, setNearbyPlaces] = useState(luckySpots)
-  const loaded = useKakaoLoader()
+  const [sdkLoaded, setSdkLoaded] = useState(false)
 
   const generateLottoNumbers = () => {
     setIsGenerating(true)
@@ -39,7 +40,7 @@ export default function Home() {
 
   const handleFindNearby = () => {
     if (!navigator.geolocation) {
-      alert("이 브라우저는 위치 정보를 지원하지 않습니다.")
+      alert("위치 정보를 지원하지 않습니다.")
       return
     }
 
@@ -48,16 +49,19 @@ export default function Home() {
         const { latitude, longitude } = position.coords
         setUserLocation({ lat: latitude, lng: longitude })
 
-        const filtered = luckySpots.filter((spot) => {
-          const dist = getDistance(latitude, longitude, spot.lat, spot.lng)
-          return dist <= 20 
+        loadKakaoMapScript(() => {
+          setSdkLoaded(true)
         })
 
+        const filtered = luckySpots.filter((spot) => {
+          const dist = getDistance(latitude, longitude, spot.lat, spot.lng)
+          return dist <= 20
+        })
         setNearbyPlaces(filtered.length > 0 ? filtered : luckySpots)
       },
       () => {
         alert("위치 권한을 허용해주세요.")
-      },
+      }
     )
   }
 
@@ -98,12 +102,12 @@ export default function Home() {
             주변 명당 찾기
           </Button>
 
-          {loaded && userLocation ? (
+          {sdkLoaded && userLocation ? (
             <div style={{ marginTop: "24px", display: "flex", flexDirection: "column", gap: "20px" }}>
               <KakaoMap userLocation={userLocation} places={nearbyPlaces} />
               <NearbySpots userLocation={userLocation} />
             </div>
-          ) : loaded && !userLocation ? (
+          ) : sdkLoaded && !userLocation ? (
             <p
               style={{
                 textAlign: "center",

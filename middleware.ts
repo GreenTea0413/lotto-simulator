@@ -9,20 +9,36 @@ export function middleware(request: NextRequest) {
   response.headers.set("X-Frame-Options", "DENY")
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin")
   response.headers.set("X-DNS-Prefetch-Control", "on")
-  response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload")
-  response.headers.set("Permissions-Policy", "geolocation=*, microphone=(), camera=()")
+  response.headers.set(
+    "Strict-Transport-Security",
+    "max-age=63072000; includeSubDomains; preload"
+  )
+  response.headers.set(
+    "Permissions-Policy",
+    "geolocation=*, microphone=(), camera=()"
+  )
 
   response.headers.set(
     "Content-Security-Policy",
     `
       default-src 'self';
-      script-src 'self' https://dapi.kakao.com 'unsafe-inline' 'unsafe-eval';
+      script-src 
+        'self'
+        https://dapi.kakao.com
+        https://t1.daumcdn.net
+        'unsafe-inline'
+        'unsafe-eval';
+      script-src-elem 
+        'self'
+        https://dapi.kakao.com
+        https://t1.daumcdn.net
+        'unsafe-inline';
       style-src 'self' 'unsafe-inline';
-      img-src * data: blob:;
+      img-src * blob: data:;
       connect-src *;
       font-src 'self';
-      frame-src https://dapi.kakao.com;
-    `.replace(/\s{2,}/g, ' ').trim()
+      frame-src https://dapi.kakao.com https://t1.daumcdn.net;
+    `.replace(/\s{2,}/g, " ").trim()
   )
 
   return response

@@ -47,8 +47,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <head>
-      </head>
       <body className={`font-sans antialiased`}>
         {children}
         <Analytics />

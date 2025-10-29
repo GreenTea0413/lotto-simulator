@@ -8,7 +8,7 @@ import KakaoMap from "@/components/kakao-map"
 import NearbySpots from "@/components/nearby-spots"
 import { luckySpots } from "@/data/luckySpots"
 import { getDistance } from "@/lib/getDistance"
-import { loadKakaoMapScript } from "@/hooks/useKakaoLoader"
+import { loadKakaoMapScript } from "@/lib/loadKakaoMapScript"
 import { MapPin } from "lucide-react"
 
 

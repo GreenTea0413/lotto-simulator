@@ -21,7 +21,6 @@ export function LatestResults() {
 
   const fetchLatestResult = async () => {
     try {
-      // 동행복권 API 호출
       const response = await fetch("/api/lotto/latest")
       const data = await response.json()
       setResult(data)

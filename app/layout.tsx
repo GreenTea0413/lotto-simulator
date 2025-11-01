@@ -7,14 +7,14 @@ const _geist = Geist({ subsets: ['latin'] })
 const _geistMono = Geist_Mono({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '로또 시뮬레이션 - 당신의 행운을 예측하세요!',
-  description: '이름이나 생년월일로 로또 번호를 추천받고, 재미로 즐겨보세요.',
-  metadataBase: new URL('https://lotto-simm.vercel.app'),
-  keywords: ['lottosimm','로또', '번호 추천', '행운', '시뮬레이터', '로또심', '로또 시뮬'],
+  title: 'LottoSimm 로또 시뮬레이션 - 당신의 행운을 예측하세요!',
+  description: 'LottoSimm 로또 번호를 추천받고, 재미로 즐겨보세요.',
+  metadataBase: new URL('https://lottosimm.vercel.app'),
+  keywords: ['LottoSimm','lottosimm','로또', '번호 추천', '행운', '시뮬레이터', '로또심', '로또 시뮬'],
   openGraph: {
-    title: '로또 시뮬레이션',
-    description: '랜덤 추천, 위치 기반 명소와 함께하는 행운 테스트',
-    url: 'https://lotto-simm.vercel.app',
+    title: 'LottoSimm 로또 시뮬레이션',
+    description: 'LottoSimm 랜덤 추천, 위치 기반 명소와 함께하는 행운 테스트',
+    url: 'https://lottosimm.vercel.app',
     siteName: '로또 시뮬레이터',
     images: [
       {

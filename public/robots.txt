@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://lotto-simm.vercel.app
+Host: https://lottosimm.vercel.app
 
 # Sitemaps
-Sitemap: https://lotto-simm.vercel.app/sitemap.xml
+Sitemap: https://lottosimm.vercel.app/sitemap.xml

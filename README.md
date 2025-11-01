@@ -1,7 +1,7 @@
 # lotto-simulator (로또심)
 
 ## 가끔은 행운을 기대해 봐도 좋지않을까요? 🍀
-[lotto-simm.vercel.app](https://lotto-simm.vercel.app/)
+[lottosimm.vercel.app](https://lottosimm.vercel.app/)
 - 결과를 돌려서 나온 번호를 저장할 수도 있어요!
 - 이미지 공유도 가능하여 친구들과 재미로 로또를 해봐요!
 - 운 좋게 1등을 노려봅시다 ㅎ

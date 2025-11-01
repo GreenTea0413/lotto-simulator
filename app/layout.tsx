@@ -30,9 +30,6 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  verification: {
-    google: 'lcnJKA7vmJdAeeH_r_Sj_uWnJt-qj0_kyd5Om9o3imA', 
-  },
   icons: {
     icon: '/icon-192x192.png',
     apple: '/icon-192x192.png',
@@ -47,6 +44,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
+      <head>
+        {/* 환경변수에서 불러온 구글/네이버 인증 메타 태그 */}
+        {process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION && (
+          <meta name="google-site-verification" content={process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION} />
+        )}
+        {process.env.NEXT_PUBLIC_NAVER_VERIFICATION && (
+          <meta name="naver-site-verification" content={process.env.NEXT_PUBLIC_NAVER_VERIFICATION} />
+        )}
+      </head>
       <body className={`font-sans antialiased`}>
         {children}
         <Analytics />

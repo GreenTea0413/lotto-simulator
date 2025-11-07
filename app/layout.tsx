@@ -45,15 +45,31 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* 환경변수에서 불러온 구글/네이버 인증 메타 태그 */}
         {process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION && (
           <meta name="google-site-verification" content={process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION} />
         )}
+
         {process.env.NEXT_PUBLIC_NAVER_VERIFICATION && (
           <meta name="naver-site-verification" content={process.env.NEXT_PUBLIC_NAVER_VERIFICATION} />
         )}
+
+        {process.env.NEXT_PUBLIC_ADSENSE_ID && (
+          <>
+            <meta
+              name="google-adsense-account"
+              content={process.env.NEXT_PUBLIC_ADSENSE_ID}
+            />
+
+            <script
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
+              crossOrigin="anonymous"
+            ></script>
+          </>
+        )}
       </head>
-      <body className={`font-sans antialiased`}>
+
+      <body className="font-sans antialiased">
         {children}
         <Analytics />
       </body>

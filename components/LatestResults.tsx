@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { LottoBall } from "./lotto-ball"
+import { LottoBall } from "./LottoBall"
 import { Card } from "@/components/ui/card"
 
 interface LottoResult {

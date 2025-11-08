@@ -2,15 +2,15 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { LottoReceipt } from "@/components/lotto-receipt"
-import { LatestResults } from "@/components/latest-results"
-import KakaoMap from "@/components/kakao-map"
-import NearbySpots from "@/components/nearby-spots"
+import { LottoReceipt } from "@/components/LottoReceipt"
+import { LatestResults } from "@/components/LatestResults"
+import KakaoMap from "@/components/KakaoMap"
+import NearbySpots from "@/components/NearbySpots"
 import { luckySpots } from "@/data/luckySpots"
 import { getDistance } from "@/lib/getDistance"
 import { loadKakaoMapScript } from "@/lib/loadKakaoMapScript"
 import { MapPin } from "lucide-react"
-
+import LottoFrequencyChart from "@/components/LottoFrequencyChart"
 
 export default function Home() {
   const [lottoSets, setLottoSets] = useState<number[][]>([])
@@ -18,6 +18,7 @@ export default function Home() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [nearbyPlaces, setNearbyPlaces] = useState(luckySpots)
   const [sdkLoaded, setSdkLoaded] = useState(false)
+  const [showChart, setShowChart] = useState(false) // ✅ 분석 차트 토글 상태
 
   const generateLottoNumbers = () => {
     setIsGenerating(true)
@@ -73,6 +74,7 @@ export default function Home() {
           <p className="text-sm text-muted-foreground">1등만이 답이다</p>
         </div>
 
+        {/* 번호 생성 버튼 */}
         <Button
           onClick={generateLottoNumbers}
           disabled={isGenerating}
@@ -82,10 +84,30 @@ export default function Home() {
           {isGenerating ? "생성 중..." : "번호 생성하기"}
         </Button>
 
+        {/* 생성된 로또 세트 */}
         {lottoSets.length > 0 && <LottoReceipt lottoSets={lottoSets} />}
 
+        {/* 최신 회차 결과 */}
         <LatestResults />
 
+        {/* 분석 차트 토글 버튼 */}
+        <div style={{ marginTop: "48px", paddingTop: "24px", borderTop: "2px dashed #d1d5db" }}>
+          <Button
+            onClick={() => setShowChart((prev) => !prev)}
+            className="w-full h-12 text-base font-mono"
+            size="lg"
+          >
+            {showChart ? "분석 닫기" : "분석 확인하기"}
+          </Button>
+
+          {showChart && (
+            <div className="mt-6">
+              <LottoFrequencyChart />
+            </div>
+          )}
+        </div>
+
+        {/* 주변 명당 찾기 */}
         <div style={{ marginTop: "48px", paddingTop: "24px", borderTop: "2px dashed #d1d5db" }}>
           <Button
             onClick={handleFindNearby}

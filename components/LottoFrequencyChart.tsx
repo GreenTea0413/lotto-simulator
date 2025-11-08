@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 
 type Stat = {
   number: number
@@ -117,7 +117,7 @@ export default function LottoFrequencyChart() {
                             boxShadow: `0 0 20px ${color.backgroundColor}40`,
                           }}
                         >
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+                          <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-pulse" />
                         </div>
                       </div>
                     </div>

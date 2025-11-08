@@ -3,9 +3,11 @@ import { LottoBall } from "./LottoBall"
 export function LottoReceiptView({
   timestamp,
   lottoSets,
+  getBorderColor,
 }: {
   timestamp: string
   lottoSets: number[][]
+  getBorderColor?: (set: number[]) => string | undefined
 }) {
   return (
     <div
@@ -49,25 +51,15 @@ export function LottoReceiptView({
 
       <div style={{ padding: "16px" }}>
         {lottoSets.map((row, idx) => (
-          <div key={idx} style={{ marginBottom: 16 }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: 8,
-              }}
-            >
-              <span style={{ fontFamily: "monospace", fontSize: 12 }}>
-                {String.fromCharCode(65 + idx)}
-              </span>
-              <span style={{ fontFamily: "monospace", fontSize: 12 }}>
-                자동
-              </span>
+          <div
+            key={idx}
+            className={`p-2 rounded ${getBorderColor ? getBorderColor(row) : "border border-gray-200"}`}
+          >
+            <div className="flex justify-between mb-2 text-xs font-mono">
+              <span>{String.fromCharCode(65 + idx)}</span>
+              <span>자동</span>
             </div>
-
-            <div
-              style={{ display: "flex", gap: 8, justifyContent: "center" }}
-            >
+            <div className="flex gap-2 justify-center">
               {row.map((num, i) => (
                 <LottoBall key={i} number={num} />
               ))}

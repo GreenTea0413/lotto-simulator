@@ -40,6 +40,7 @@ function LottoBall({ number }: { number: number }) {
   )
 }
 
+
 export function LottoReceipt({ lottoSets }: LottoReceiptProps) {
   const now = new Date()
   const receiptRef = useRef<HTMLDivElement>(null)

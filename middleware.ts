@@ -25,12 +25,14 @@ export function middleware(request: NextRequest) {
         'self'
         https://dapi.kakao.com
         https://t1.daumcdn.net
+        https://va.vercel-scripts.com
         'unsafe-inline'
         'unsafe-eval';
       script-src-elem 
         'self'
         https://dapi.kakao.com
         https://t1.daumcdn.net
+        https://va.vercel-scripts.com
         'unsafe-inline';
       style-src 'self' 'unsafe-inline';
       img-src * blob: data:;

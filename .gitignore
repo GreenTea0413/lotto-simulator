@@ -16,12 +16,24 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
+# env files (API key, 인증서 포함되므로 반드시 제외)
 .env*
-.env
+!.env.example
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local https 인증서
+localhost.pem
+localhost-key.pem
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

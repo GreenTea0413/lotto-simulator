@@ -21,10 +21,19 @@ export function loadKakaoMapScript(callback: () => void) {
   }
 
   if (document.getElementById('kakao-map-sdk')) {
-    window.kakao.maps.load(callback)
+    const existingScript = document.getElementById('kakao-map-sdk') as HTMLScriptElement
+
+    if (typeof window.kakao === 'undefined') {
+      existingScript.onload = () => {
+        window.kakao.maps.load(callback)
+      }
+    } else if (window.kakao.maps) {
+      window.kakao.maps.load(callback)
+    }
+
     return
   }
-
+  
   const script = document.createElement('script')
   script.id = 'kakao-map-sdk'
   script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${appKey}&autoload=false&libraries=services`

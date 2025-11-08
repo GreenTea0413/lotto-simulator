@@ -84,15 +84,10 @@ export default function LottoFrequencyChart() {
 
   return (
     <div className="w-full space-y-8">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-foreground tracking-tight">로또 번호 분석</h2>
-        <p className="text-sm text-muted-foreground">최근 5회차 당첨번호 출현 빈도 분석</p>
-      </div>
-
       <Card className="p-4 space-y-3">
         <div className="flex flex-col space-y-1">
           <h2 className="text-sm font-bold font-mono">출현 빈도 분포</h2>
-          <span className="text-xs text-muted-foreground font-mono">TOP 3 빈도 분석</span>
+          <span className="text-xs text-muted-foreground font-mono">숫자 1 ~ 45까지의 횟수</span>
         </div>
           
         <CardContent>

@@ -1,4 +1,4 @@
-import html2canvas from "html2canvas"
+import html2canvas from "html2canvas-pro"
 import { RefObject } from "react"
 
 export function useLottoCapture(ref: RefObject<HTMLElement | null>) {

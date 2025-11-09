@@ -18,16 +18,16 @@
   --muted-foreground: #8d8d8d;
   --accent: #f7f7f7;
   --accent-foreground: #343434;
-  --destructive: #e63946; /* 대체된 강렬한 빨간색 */
+  --destructive: #e63946;
   --destructive-foreground: #ffffff;
   --border: #ebebeb;
   --input: #ebebeb;
   --ring: #b4b4b4;
-  --chart-1: #ffbe0b; /* 노랑 */
-  --chart-2: #3a86ff; /* 파랑 */
-  --chart-3: #8338ec; /* 보라 */
-  --chart-4: #ff006e; /* 진한 핑크 */
-  --chart-5: #fb5607; /* 오렌지 */
+  --chart-1: #ffbe0b; 
+  --chart-2: #3a86ff; 
+  --chart-3: #8338ec; 
+  --chart-4: #ff006e; 
+  --chart-5: #fb5607;
   --radius: 0.625rem;
   --sidebar: #fbfbfb;
   --sidebar-foreground: #242424;

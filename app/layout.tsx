@@ -59,7 +59,7 @@ export default function RootLayout({
         )}
       </head>
 
-      <body className="font-sans antialiased max-w-md mx-auto p-4">
+      <body className="font-sans antialiased max-w-md mx-auto bg-gray-50">
         {children}
         <Analytics />
         <LottoNav />

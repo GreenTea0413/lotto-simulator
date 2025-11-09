@@ -154,17 +154,19 @@ export default function LottoSavingPage() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             {/* 왼쪽: 등수 설명 */}
-            <div className="flex flex-row gap-3 text-xs">
-              {lottoRanks.map(rank => (
-                <div key={rank.label} className="flex items-center gap-1">
-                  <span className={`w-2 h-2 rounded-full inline-block ${rank.color.split(" ")[0]}`} />
-                  <span>{rank.label}</span>
-                </div>
-              ))}
+            <div className="flex flex-row gap-2 text-xs">
+              {lottoRanks
+                .filter(rank => rank.label !== "꽝")
+                .map(rank => (
+                  <div key={rank.label} className="flex items-center gap-1">
+                    <span className={`w-2 h-2 rounded-full inline-block ${rank.color.split(" ")[0]}`} />
+                    <span>{rank.label}</span>
+                  </div>
+                ))}
             </div>
 
             {/* 오른쪽: 등수/셀렉트 */}
-            <div className="flex items-center flex-row gap-2">
+            <div className="flex items-center flex-row gap-1">
               <div className="relative">
                 {overallRank !== "등수없음" && (
                   <span className="absolute -top-3 left-0 -translate-x-1/2 z-50 text-yellow-400 color-yellow-400">

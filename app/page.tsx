@@ -4,7 +4,8 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { LottoReceipt } from "@/components/LottoReceipt"
 import { LatestResults } from "@/components/LatestResults"
-import KakaoAd from "@/components/KakaoAd"
+import KakaoAd320x50 from "@/components/KakaoAd320x50"
+import KakaoAd320x100 from "@/components/KakaoAd320x100"
 
 export default function Home() {
   const [lottoSets, setLottoSets] = useState<number[][]>([])
@@ -32,12 +33,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background py-8 px-4 mb-16">
       <div className="max-w-md mx-auto space-y-8">
-        <KakaoAd
-          unitId="DAN-QdWAILcwQ2JIWqZn"
-          width="320"
-          height="50"
-          onFailCallback="handleAdFail1"
-        />
+        <KakaoAd320x50 />
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold text-foreground font-mono">로또 6/45</h1>
           <p className="text-sm text-muted-foreground">1등만이 답이다</p>
@@ -52,6 +48,7 @@ export default function Home() {
           {isGenerating ? "생성 중..." : "번호 생성하기"}
         </Button>
         {lottoSets.length > 0 && <LottoReceipt lottoSets={lottoSets} />}
+        <KakaoAd320x100 />
       </div>
     </main>
   )

@@ -8,7 +8,8 @@ import { luckySpots } from "@/data/luckySpots"
 import { getDistance } from "@/lib/getDistance"
 import { loadKakaoMapScript } from "@/lib/loadKakaoMapScript"
 import { MapPin } from "lucide-react"
-import KakaoAd from "@/components/KakaoAd"
+import KakaoAd from "@/components/KakaoAd320x50"
+import KakaoAd2 from "@/components/KakaoAd320x100"
 
 export default function LuckyMapSection() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({
@@ -79,6 +80,7 @@ export default function LuckyMapSection() {
           <MapPin size={20} className="mr-2" />
           주변 명당 찾기
         </Button>
+        <KakaoAd2/>
       </div>
     </main>
   )

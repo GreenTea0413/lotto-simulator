@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server"
 
-export async function GET(_: Request, context: { params: { round: string } }) {
-  const { round } = context.params
+export async function GET(request: Request, context: { params?: { round?: string } }) {
+  const params = await context.params
+  const round = params?.round
+
+  if (!round) {
+    return NextResponse.json({ error: "Round parameter is missing" }, { status: 400 })
+  }
 
   try {
     const response = await fetch(
@@ -27,6 +32,7 @@ export async function GET(_: Request, context: { params: { round: string } }) {
       bonus: data.bnusNo,
     })
   } catch (error) {
+    console.error("Lotto API error:", error)
     return NextResponse.json({ error: "Failed to fetch lotto data" }, { status: 500 })
   }
 }

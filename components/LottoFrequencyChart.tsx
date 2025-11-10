@@ -1,74 +1,38 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-
-type Stat = {
-  number: number
-  freq: number
-}
+import { useRecentStats } from "@/hooks/queries/useRecentStats"
+import { useLottoStore } from "@/hooks/stores/useLottoStore"
 
 function getNumberColor(num: number) {
-  if (num <= 10)
-    return {
-      backgroundColor: "#facc15",
-      textColor: "#422006",
-    }
-  if (num <= 20)
-    return {
-      backgroundColor: "#3b82f6",
-      textColor: "#f0f9ff",
-    }
-  if (num <= 30)
-    return {
-      backgroundColor: "#ef4444",
-      textColor: "#fef2f2",
-    }
-  if (num <= 40)
-    return {
-      backgroundColor: "#52525b",
-      textColor: "#f9fafb",
-    }
-  return {
-    backgroundColor: "#16a34a",
-    textColor: "#f0fdf4",
-  }
+  if (num <= 10) return { backgroundColor: "#facc15", textColor: "#422006" }
+  if (num <= 20) return { backgroundColor: "#3b82f6", textColor: "#f0f9ff" }
+  if (num <= 30) return { backgroundColor: "#ef4444", textColor: "#fef2f2" }
+  if (num <= 40) return { backgroundColor: "#52525b", textColor: "#f9fafb" }
+  return { backgroundColor: "#16a34a", textColor: "#f0fdf4" }
 }
 
 export default function LottoFrequencyChart() {
-  const [data, setData] = useState<Stat[]>([])
-  const [loading, setLoading] = useState(true)
-  const [stats, setStats] = useState({ max: 0, avg: 0, total: 0 })
+  const { recentStats } = useLottoStore()
+  const { isLoading, isError } = useRecentStats()
   const [hoveredNumber, setHoveredNumber] = useState<number | null>(null)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("/api/lotto/recent-stats")
-        const json = await res.json()
+  const stats = useMemo(() => {
+    if (!recentStats) return { max: 0, avg: 0, total: 0 }
+    const freqs = recentStats.map((item) => item.freq)
+    const max = Math.max(...freqs)
+    const total = freqs.reduce((a, b) => a + b, 0)
+    const avg = parseFloat((total / freqs.length).toFixed(2))
+    return { max, avg, total }
+  }, [recentStats])
 
-        const freqs = json.map((item: Stat) => item.freq)
-        const maxFreq = Math.max(...freqs)
-        const totalFreq = freqs.reduce((a: number, b: number) => a + b, 0)
-        const avgFreq = (totalFreq / freqs.length).toFixed(2)
+  const topNumbers = useMemo(() => {
+    if (!recentStats) return []
+    return [...recentStats].sort((a, b) => b.freq - a.freq).slice(0, 3)
+  }, [recentStats])
 
-        setData(json)
-        setStats({
-          max: maxFreq,
-          avg: Number.parseFloat(avgFreq),
-          total: totalFreq,
-        })
-      } catch (err) {
-        console.error("Error fetching stats:", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [])
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
@@ -79,21 +43,23 @@ export default function LottoFrequencyChart() {
     )
   }
 
-  const topNumbers = [...data].sort((a, b) => b.freq - a.freq).slice(0, 3)
-  const maxFreq = stats.max
+  if (isError || !recentStats) {
+    return <p className="text-center text-sm text-red-500">데이터를 불러오지 못했습니다.</p>
+  }
 
   return (
     <div className="w-full space-y-8">
+      {/* 출현 빈도 분포 카드 */}
       <Card className="p-4 space-y-3">
         <div className="flex flex-col space-y-1">
           <h2 className="text-sm font-bold font-mono">출현 빈도 분포</h2>
           <span className="text-xs text-muted-foreground font-mono">숫자 1 ~ 45까지의 횟수</span>
         </div>
-          
+
         <CardContent>
           <div className="space-y-3">
-            {data.map((item, idx) => {
-              const percentage = (item.freq / maxFreq) * 100
+            {recentStats.map((item) => {
+              const percentage = (item.freq / stats.max) * 100
               const color = getNumberColor(item.number)
 
               return (
@@ -130,8 +96,9 @@ export default function LottoFrequencyChart() {
         </CardContent>
       </Card>
 
+      {/* Top 3 카드 */}
       <Card className="p-4 space-y-3">
-         <div className="flex flex-col space-y-1">
+        <div className="flex flex-col space-y-1">
           <h2 className="text-sm font-bold font-mono">가장 많이 나온 번호</h2>
           <span className="text-xs text-muted-foreground font-mono">TOP 3 빈도 분석</span>
         </div>

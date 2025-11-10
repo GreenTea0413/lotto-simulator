@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import LottoNav from '@/components/LottoNav'
 import Script from 'next/script'
+import { Providers } from './providers'
 
 const _geist = Geist({ subsets: ['latin'] })
 const _geistMono = Geist_Mono({ subsets: ['latin'] })
@@ -65,9 +66,11 @@ export default function RootLayout({
       </head>
 
       <body className="font-sans antialiased max-w-md mx-auto bg-gray-50">
-        {children}
-        <Analytics />
-        <LottoNav />
+        <Providers>
+          {children}
+          <Analytics />
+          <LottoNav />
+        </Providers>
       </body>
     </html>
   )

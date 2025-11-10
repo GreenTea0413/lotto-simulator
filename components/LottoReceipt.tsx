@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import { LottoReceiptView } from "./LottoReceiptView"
 import { LottoActionButtons } from "./LottoActionButtons"
-import { useLottoCapture } from "@/hooks/useLottoCapture"
+import { useLottoCapture } from "@/hooks/ui/useLottoCapture"
 
 interface LottoReceiptProps {
   lottoSets: number[][]

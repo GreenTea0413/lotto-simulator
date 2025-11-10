@@ -1,4 +1,3 @@
-// app/api/lotto/recent-stats/route.ts
 import { NextResponse } from "next/server"
 
 export async function GET() {

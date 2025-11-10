@@ -18,7 +18,7 @@ export default function NearbySpots({ userLocation }: Props) {
       distance: getDistance(userLocation.lat, userLocation.lng, spot.lat, spot.lng),
     }))
     .sort((a, b) => a.distance - b.distance)
-    .slice(0, 3)
+    .slice(0, 10)
 
   return (
     <div style={{ marginTop: "24px" }}>
@@ -40,7 +40,7 @@ export default function NearbySpots({ userLocation }: Props) {
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         {top3.map((spot, idx) => (
           <div
-            key={spot.name}
+            key={spot.address}
             style={{
               display: "flex",
               justifyContent: "space-between",

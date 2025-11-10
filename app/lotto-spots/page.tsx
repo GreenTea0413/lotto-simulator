@@ -49,7 +49,8 @@ export default function LuckyMapSection() {
       <div className="max-w-md mx-auto space-y-6">
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold text-foreground tracking-tight">행운 명당 지도</h2>
-          <p className="text-sm text-muted-foreground">지도는 미리 보여주고, 위치 권한을 허용하면 주변 명당을 표시해줍니다</p>
+          <p className="text-sm text-muted-foreground">최근 1등 당첨 판매점 위치를 알려드릴게요!</p>
+          <p className="text-sm text-muted-foreground">*출처: 네이버*</p>
         </div>
 
         {sdkLoaded ? (

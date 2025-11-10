@@ -71,7 +71,7 @@ export default function LottoSavingPage() {
       .then(res => res.json())
       .then((data: LottoResult) => {
         const latest = data.round
-        const options = Array.from({ length: 20 }, (_, i) => latest - 19 + i)
+        const options = Array.from({ length: 50 }, (_, i) => latest - 49 + i)
         setRoundOptions(options)
         setSelectedRound(latest)
         setWinning(data)

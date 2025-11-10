@@ -48,7 +48,12 @@ export default function LuckyMapSection() {
   return (
     <main className="min-h-screen bg-background py-8 px-4 mb-16">
       <div className="max-w-md mx-auto space-y-6">
-        <KakaoAd />
+        <KakaoAd
+          unitId="DAN-QdWAILcwQ2JIWqZn"
+          width="320"
+          height="50"
+          onFailCallback="handleAdFail1"
+        />
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold text-foreground tracking-tight">행운 명당 지도</h2>
           <p className="text-sm text-muted-foreground">최근 1등 당첨 판매점 위치를 알려드릴게요!</p>

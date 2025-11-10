@@ -32,7 +32,12 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background py-8 px-4 mb-16">
       <div className="max-w-md mx-auto space-y-8">
-        <KakaoAd />
+        <KakaoAd
+          unitId="DAN-QdWAILcwQ2JIWqZn"
+          width="320"
+          height="50"
+          onFailCallback="handleAdFail1"
+        />
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold text-foreground font-mono">로또 6/45</h1>
           <p className="text-sm text-muted-foreground">1등만이 답이다</p>

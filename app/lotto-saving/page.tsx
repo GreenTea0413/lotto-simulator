@@ -147,7 +147,12 @@ export default function LottoSavingPage() {
   return (
     <main className="min-h-screen bg-background py-8 px-4 mb-16">
       <div className="max-w-md mx-auto space-y-6">
-        <KakaoAd />
+        <KakaoAd
+          unitId="DAN-QdWAILcwQ2JIWqZn"
+          width="320"
+          height="50"
+          onFailCallback="handleAdFail1"
+        />
         <div className="text-center space-y-1">
           <h2 className="text-2xl font-bold">저장한 번호</h2>
           <p className="text-sm text-gray-500">회차별 당첨 결과를 확인해보세요!</p>

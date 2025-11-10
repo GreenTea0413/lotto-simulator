@@ -1,32 +1,50 @@
-'use client'
+"use client"
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from "react"
 
-export default function KakaoBannerAd() {
-  const adRef = useRef<HTMLDivElement>(null)
+interface KakaoAdProps {
+  unitId: string
+  width: string
+  height: string
+  onFailCallback?: string
+}
 
+export default function KakaoAd({
+  unitId,
+  width,
+  height,
+  onFailCallback,
+}: KakaoAdProps) {
   useEffect(() => {
-    try {
-      if (window && (window as any).kakao && (window as any).kakao.adfit) {
-        (window as any).kakao.adfit.load()
-      }
-    } catch (e) {
-      console.error('카카오 배너 광고 로딩 실패', e)
+    const ins = document.createElement("ins")
+    ins.className = "kakao_ad_area"
+    ins.style.display = "none"
+    ins.setAttribute("data-ad-unit", unitId)
+    ins.setAttribute("data-ad-width", width)
+    ins.setAttribute("data-ad-height", height)
+    if (onFailCallback) {
+      ins.setAttribute("data-ad-onfail", onFailCallback)
     }
-  }, [])
 
-  return (
-    <div
-      ref={adRef}
-      className="fixed bottom-0 left-1/2 -translate-x-1/2 w-[320px] h-[50px] z-50"
-    >
-      <ins
-        className="kakao_ad_area"
-        style={{ display: 'none' }}
-        data-ad-unit="DAN-QdWAILcwQ2JIWqZn"
-        data-ad-width="320"
-        data-ad-height="50"
-      ></ins>
-    </div>
-  )
+    const script = document.createElement("script")
+    script.async = true
+    script.type = "text/javascript"
+    script.charset = "utf-8"
+    script.src = "https://t1.daumcdn.net/kas/static/ba.min.js"
+
+    const container = document.getElementById(`kakao-ad-container-${unitId}`)
+    if (container && container.children.length === 0) {
+      container.appendChild(ins)
+      container.appendChild(script)
+    }
+
+    // NO-AD fallback 함수 등록 (선택)
+    if (onFailCallback) {
+      (window as any)[onFailCallback] = (elm: HTMLElement) => {
+        elm.innerHTML = "<div style='text-align:center;'>광고를 불러오지 못했습니다</div>"
+      }
+    }
+  }, [unitId, width, height, onFailCallback])
+
+  return <div id={`kakao-ad-container-${unitId}`} className="w-full flex justify-center" />
 }

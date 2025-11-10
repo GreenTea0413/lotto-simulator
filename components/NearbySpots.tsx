@@ -35,7 +35,7 @@ export default function NearbySpots({ userLocation }: Props) {
         }}
       >
         <MapPin size={20} style={{ color: "#22c55e" }} />
-        가까운 명당 TOP 3
+        가까운 명당 TOP 10
       </h2>
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         {top3.map((spot, idx) => (

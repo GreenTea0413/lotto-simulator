@@ -52,7 +52,7 @@ export default function LuckyMapSection() {
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold text-foreground tracking-tight">행운 명당 지도</h2>
           <p className="text-sm text-muted-foreground">최근 1등 당첨 판매점 위치를 알려드릴게요!</p>
-          <p className="text-sm text-muted-foreground">*출처: 네이버*</p>
+          <p className="text-sm text-muted-foreground">* 출처: 네이버 * 카카오맵 설치 필요</p>
         </div>
 
         {sdkLoaded ? (

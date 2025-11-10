@@ -8,6 +8,7 @@ import { luckySpots } from "@/data/luckySpots"
 import { getDistance } from "@/lib/getDistance"
 import { loadKakaoMapScript } from "@/lib/loadKakaoMapScript"
 import { MapPin } from "lucide-react"
+import KakaoAd from "@/components/KakaoAd"
 
 export default function LuckyMapSection() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({
@@ -47,6 +48,7 @@ export default function LuckyMapSection() {
   return (
     <main className="min-h-screen bg-background py-8 px-4 mb-16">
       <div className="max-w-md mx-auto space-y-6">
+        <KakaoAd />
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold text-foreground tracking-tight">행운 명당 지도</h2>
           <p className="text-sm text-muted-foreground">최근 1등 당첨 판매점 위치를 알려드릴게요!</p>

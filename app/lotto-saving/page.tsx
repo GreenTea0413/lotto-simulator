@@ -7,6 +7,7 @@ import { LottoActionButtons } from "@/components/LottoActionButtons"
 import { useLottoCapture } from "@/hooks/useLottoCapture"
 import { LottoBall } from "@/components/LottoBall"
 import { Card } from "@/components/ui/card"
+import KakaoAd from "@/components/KakaoAd"
 
 interface SavedLotto {
   id: number
@@ -146,6 +147,7 @@ export default function LottoSavingPage() {
   return (
     <main className="min-h-screen bg-background py-8 px-4 mb-16">
       <div className="max-w-md mx-auto space-y-6">
+        <KakaoAd />
         <div className="text-center space-y-1">
           <h2 className="text-2xl font-bold">저장한 번호</h2>
           <p className="text-sm text-gray-500">회차별 당첨 결과를 확인해보세요!</p>

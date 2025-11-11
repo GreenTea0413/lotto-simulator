@@ -32,38 +32,27 @@ const lottoRanks = [
 ]
 
 export default function LottoSavingPage() {
-  // ✅ 저장된 번호
   const [saved, setSaved] = useState<SavedLotto[]>([])
   const [openId, setOpenId] = useState<number | null>(null)
   const [page, setPage] = useState(1)
 
-  // ✅ Zustand에서 마지막 50회차 당첨결과 사용
   const last50Rounds = useLottoStore((state) => state.last50Rounds)
-
-  // ✅ 최신 회차 가져오는 Query
   const { data: latest } = useLatestLotto()
 
-  // ✅ 받은 latest.round로 50개 로딩
   const { isLoading } = useLottoByRound(latest?.round ?? null)
 
-  // ✅ 회차 선택값 및 옵션
   const [selectedRound, setSelectedRound] = useState<number | null>(null)
   const [roundOptions, setRoundOptions] = useState<number[]>([])
-
-  // ✅ 해당 회차 당첨 결과
   const winning = last50Rounds.find(r => r.round === selectedRound) ?? null
 
-  // ✅ 캡쳐용 Ref
   const receiptRef = useRef<HTMLDivElement>(null)
   const { downloadImage, shareImage } = useLottoCapture(receiptRef)
 
-  // ✅ 로컬 저장 번호 불러오기
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("savedLotto") || "[]")
     setSaved(data)
   }, [])
 
-  // ✅ 최신 회차 기반 옵션 생성 (50개)
   useEffect(() => {
     if (!latest) return
     const latestRound = latest.round
@@ -72,7 +61,6 @@ export default function LottoSavingPage() {
     setSelectedRound(latestRound)
   }, [latest])
 
-  // ✅ 순위 판단
   const getRank = (set: number[]) => {
     if (!winning) return "꽝"
     const match = set.filter((n) => winning.numbers.includes(n)).length
@@ -125,15 +113,6 @@ export default function LottoSavingPage() {
     setPage(1)
   }
 
-  // ✅ 50개 로딩 전이거나 최신 정보가 없으면 로딩
-  if (isLoading || !latest || last50Rounds.length < 50) {
-    return (
-      <div className="flex justify-center items-center h-[500px] text-gray-500">
-        로딩 중...
-      </div>
-    )
-  }
-
   const overallRank = getOverallBestRank()
   const rankColor = getRankColor(overallRank)
 
@@ -173,18 +152,25 @@ export default function LottoSavingPage() {
                 {overallRank === "등수없음" ? "N/A" : overallRank}
               </div>
             </div>
-
-            <select
-              className="border px-2 py-1 rounded text-sm"
-              value={selectedRound ?? ""}
-              onChange={(e) => setSelectedRound(parseInt(e.target.value))}
-            >
-              {roundOptions.map((n) => (
-                <option key={n} value={n}>
-                  {n}회차
-                </option>
-              ))}
-            </select>
+            {last50Rounds.length === 50 ?(
+              <select
+                className="border px-2 py-1 rounded text-sm"
+                value={selectedRound ?? ""}
+                onChange={(e) => setSelectedRound(parseInt(e.target.value))}
+              >
+                {roundOptions.map((n) => (
+                  <option key={n} value={n}>
+                    {n}회차
+                  </option>
+                ))}
+              </select>
+            )
+          :
+            <p className="border px-2 py-1 rounded text-sm">
+              {selectedRound}회차
+            </p>
+          }
+            
           </div>
         </div>
 

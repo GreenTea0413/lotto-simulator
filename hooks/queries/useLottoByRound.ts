@@ -17,7 +17,7 @@ export function useLottoByRound(round: number | null) {
 
       const results: LottoResult[] = []
 
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 20; i++) {
         const targetRound = round - i
 
         const res = await fetch(`/api/lotto/${targetRound}`)

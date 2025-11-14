@@ -152,7 +152,7 @@ export default function LottoSavingPage() {
                 {overallRank === "등수없음" ? "N/A" : overallRank}
               </div>
             </div>
-            {last50Rounds.length === 50 ?(
+            {last50Rounds.length === 20 ?(
               <select
                 className="border px-2 py-1 rounded text-sm"
                 value={selectedRound ?? ""}

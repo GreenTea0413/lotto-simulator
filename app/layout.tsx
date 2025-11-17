@@ -5,6 +5,8 @@ import './globals.css'
 import LottoNav from '@/components/LottoNav'
 import Script from 'next/script'
 import { Providers } from './providers'
+import KakaoAd160x600Left from '@/components/KakaoAd160x600Left'
+import KakaoAd160x600Right from '@/components/KakaoAd160x600Right'
 
 const _geist = Geist({ subsets: ['latin'] })
 const _geistMono = Geist_Mono({ subsets: ['latin'] })
@@ -65,11 +67,30 @@ export default function RootLayout({
         />
       </head>
 
-      <body className="font-sans antialiased max-w-md mx-auto bg-gray-50">
+      <body className="font-sans antialiased bg-gray-50">
         <Providers>
-          {children}
-          <Analytics />
-          <LottoNav />
+          <div className="flex justify-center min-h-screen">
+            {/* 왼쪽 사이드 광고 (PC only - 1280px 이상) */}
+            <aside className="hidden xl:block fixed left-0 top-0 h-screen p-4 z-10">
+              <div className="sticky top-4">
+                <KakaoAd160x600Left />
+              </div>
+            </aside>
+
+            {/* 메인 콘텐츠 (모바일 중심 max-w-md) */}
+            <main className="w-full max-w-md mx-auto xl:mx-0">
+              {children}
+              <Analytics />
+              <LottoNav />
+            </main>
+
+            {/* 오른쪽 사이드 광고 (PC only - 1280px 이상) */}
+            <aside className="hidden xl:block fixed right-0 top-0 h-screen p-4 z-10">
+              <div className="sticky top-4">
+                <KakaoAd160x600Right />
+              </div>
+            </aside>
+          </div>
         </Providers>
       </body>
     </html>

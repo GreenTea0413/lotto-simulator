@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Crown, Trash2 } from "lucide-react"
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Crown, Trash2, Loader2 } from "lucide-react"
 import { LottoReceiptView } from "@/components/LottoReceiptView"
 import { LottoActionButtons } from "@/components/LottoActionButtons"
 import { LottoBall } from "@/components/LottoBall"
@@ -37,27 +37,33 @@ export default function LottoSavingPage() {
   const [page, setPage] = useState(1)
 
   const last50Rounds = useLottoStore((state) => state.last50Rounds)
-  const { data: latest } = useLatestLotto()
-
-  const { isLoading } = useLottoByRound(latest?.round ?? null)
+  const { data: latest, isLoading: isLatestLoading } = useLatestLotto()
 
   const [selectedRound, setSelectedRound] = useState<number | null>(null)
   const [roundOptions, setRoundOptions] = useState<number[]>([])
-  const winning = last50Rounds.find(r => r.round === selectedRound) ?? null
+  
+  // 선택된 회차의 데이터를 가져오기 (zustand에 자동 저장됨)
+  const { isLoading: isRoundLoading } = useLottoByRound(selectedRound)
+  
+  // winning 데이터: zustand에서 찾고, 없으면 최신 회차 데이터 사용
+  const winning = last50Rounds.find(r => r.round === selectedRound) 
+    ?? (selectedRound === latest?.round ? latest : null)
 
   const receiptRef = useRef<HTMLDivElement>(null)
   const { downloadImage, shareImage } = useLottoCapture(receiptRef)
 
+  // 로컬스토리지에서 저장된 번호 로드
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("savedLotto") || "[]")
     setSaved(data)
   }, [])
 
+  // 최신 회차 기준으로 회차 옵션 설정
   useEffect(() => {
     if (!latest) return
     const latestRound = latest.round
 
-    setRoundOptions(Array.from({ length: 50 }, (_, i) => latestRound - 49 + i))
+    setRoundOptions(Array.from({ length: 20 }, (_, i) => latestRound - 19 + i))
     setSelectedRound(latestRound)
   }, [latest])
 
@@ -116,6 +122,9 @@ export default function LottoSavingPage() {
   const overallRank = getOverallBestRank()
   const rankColor = getRankColor(overallRank)
 
+  // 데이터 로딩 상태 표시
+  const isDataLoading = isRoundLoading && !winning
+
   return (
     <main className="min-h-screen bg-background py-8 px-4 mb-16">
       <div className="max-w-md mx-auto space-y-6">
@@ -152,7 +161,14 @@ export default function LottoSavingPage() {
                 {overallRank === "등수없음" ? "N/A" : overallRank}
               </div>
             </div>
-            {last50Rounds.length === 20 ?(
+
+            {/* 로딩 인디케이터 추가 */}
+            {isLatestLoading ? (
+              <div className="border px-2 py-1 rounded text-sm flex items-center gap-1">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                <span>로딩중...</span>
+              </div>
+            ) : last50Rounds.length >= 20 ? (
               <select
                 className="border px-2 py-1 rounded text-sm"
                 value={selectedRound ?? ""}
@@ -164,18 +180,29 @@ export default function LottoSavingPage() {
                   </option>
                 ))}
               </select>
-            )
-          :
-            <p className="border px-2 py-1 rounded text-sm">
-              {selectedRound}회차
-            </p>
-          }
-            
+            ) : (
+              <div className="border px-2 py-1 rounded text-sm flex items-center gap-1">
+                <span>{selectedRound}회차</span>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* ✅ 당첨 번호 */}
-        {winning && (
+        {/* ✅ 당첨 번호 - 로딩 상태 개선 */}
+        {isDataLoading ? (
+          <Card className="p-4 space-y-3">
+            <div className="flex justify-between items-center">
+              <h2 className="text-sm font-bold font-mono">당첨번호</h2>
+              <span className="text-xs text-muted-foreground font-mono flex items-center gap-1">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                로딩중...
+              </span>
+            </div>
+            <div className="flex gap-2 justify-center items-center h-12">
+              <div className="text-sm text-muted-foreground">당첨 번호를 불러오는 중...</div>
+            </div>
+          </Card>
+        ) : winning ? (
           <Card className="p-4 space-y-3">
             <div className="flex justify-between items-center">
               <h2 className="text-sm font-bold font-mono">당첨번호</h2>
@@ -185,18 +212,21 @@ export default function LottoSavingPage() {
             </div>
 
             <div className="flex gap-2 justify-center items-center">
-              {winning.numbers.map((n, idx) => (
+              {winning.numbers.map((n: number, idx: number) => (
                 <LottoBall key={idx} number={n} />
               ))}
               <span className="mx-1 text-muted-foreground">+</span>
               <LottoBall number={winning.bonus} />
             </div>
           </Card>
-        )}
+        ) : null}
 
         {/* ✅ 저장 번호 */}
         {saved.length === 0 ? (
-          <p className="text-center text-gray-500 mt-8">저장된 번호가 없습니다.</p>
+          <div className="text-center py-16 space-y-2">
+            <p className="text-gray-500">저장된 번호가 없습니다.</p>
+            <p className="text-xs text-gray-400">로또 번호를 생성하고 저장해보세요!</p>
+          </div>
         ) : (
           <div className="space-y-4 min-h-[740px] flex flex-col justify-between">
             <div className="space-y-4">
@@ -204,7 +234,7 @@ export default function LottoSavingPage() {
                 const borderClass = getCardBorder(item)
 
                 return (
-                  <Card key={item.id} className={`p-4 border-2 ${borderClass}`}>
+                  <Card key={item.id} className={`p-4 border-2 ${borderClass} transition-all`}>
                     <div
                       className="flex justify-between items-center cursor-pointer"
                       onClick={() => toggleOpen(item.id)}
@@ -241,7 +271,7 @@ export default function LottoSavingPage() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="disabled:opacity-30"
+                  className="disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft />
                 </button>
@@ -253,7 +283,7 @@ export default function LottoSavingPage() {
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="disabled:opacity-30"
+                  className="disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ChevronRight />
                 </button>

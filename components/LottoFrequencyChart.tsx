@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { useRecentStats } from "@/hooks/queries/useRecentStats"
-import { useLottoStore } from "@/hooks/stores/useLottoStore"
 
 function getNumberColor(num: number) {
   if (num <= 10) return { backgroundColor: "#facc15", textColor: "#422006" }
@@ -14,8 +13,7 @@ function getNumberColor(num: number) {
 }
 
 export default function LottoFrequencyChart() {
-  const { recentStats } = useLottoStore()
-  const { isLoading, isError } = useRecentStats()
+  const { data: recentStats, isLoading, isError } = useRecentStats()
   const [hoveredNumber, setHoveredNumber] = useState<number | null>(null)
 
   const stats = useMemo(() => {

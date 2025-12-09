@@ -1,5 +1,4 @@
-import { create } from 'zustand'
-
+// 타입 정의만 export (React Query로 상태 관리)
 export interface LottoResult {
   round: number
   date: string
@@ -11,23 +10,3 @@ export interface Stat {
   number: number
   freq: number
 }
-
-interface LottoStore {
-  latestResult: LottoResult | null
-  recentStats: Stat[]              
-  last50Rounds: LottoResult[]      
-  
-  setLatestResult: (result: LottoResult) => void
-  setRecentStats: (stats: Stat[]) => void
-  setLast50Rounds: (results: LottoResult[]) => void
-}
-
-export const useLottoStore = create<LottoStore>((set) => ({
-  latestResult: null,
-  recentStats: [],          
-  last50Rounds: [],
-
-  setLatestResult: (result) => set({ latestResult: result }),
-  setRecentStats: (stats) => set({ recentStats: stats }),
-  setLast50Rounds: (results) => set({ last50Rounds: results }),
-}))

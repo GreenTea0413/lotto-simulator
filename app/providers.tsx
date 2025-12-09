@@ -9,9 +9,10 @@ export function Providers({ children }: { children: ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 1000 * 60 * 5, // 5분
-            gcTime: 1000 * 60 * 30, // 30분
+            staleTime: 1000 * 60 * 60 * 24, // 24시간 (로또는 일주일에 한 번만 추첨)
+            gcTime: 1000 * 60 * 60 * 24 * 7, // 7일
             refetchOnWindowFocus: false,
+            retry: 1, // 실패 시 1번만 재시도
           },
         },
       })

@@ -1,17 +1,30 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import { LottoResult } from "../stores/useLottoStore"
+import { LottoResult, useLottoStore } from "../stores/useLottoStore"
 
 export function useLatestLotto() {
-  return useQuery<LottoResult>({
+  const latestResult = useLottoStore((state) => state.latestResult)
+  const setLatestResult = useLottoStore((state) => state.setLatestResult)
+
+  const query = useQuery<LottoResult>({
     queryKey: ["lotto", "latest"],
     queryFn: async () => {
       const res = await fetch("/api/lotto/latest")
-      if (!res.ok) throw new Error("Failed to fetch latest lotto")
-      return res.json()
+      if (!res.ok) throw new Error("Failed")
+      const data = await res.json()
+    
+      setLatestResult(data)
+      return data
     },
-    staleTime: 1000 * 60 * 60 * 24, // 24시간 (로또는 일주일에 한 번만 추첨)
-    gcTime: 1000 * 60 * 60 * 24 * 7, // 7일
+    enabled: !latestResult,
+    refetchInterval: 1000 * 60 * 30, 
+    staleTime: 1000 * 60 * 29,
   })
+
+  return {
+    data: latestResult || query.data, 
+    isLoading: !latestResult && query.isLoading,
+    isError: query.isError,
+  }
 }

@@ -1,17 +1,31 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
+import { useLottoStore } from "../stores/useLottoStore"
 import { Stat } from "../stores/useLottoStore"
 
 export function useRecentStats() {
-  return useQuery<Stat[]>({
+  const recentStats = useLottoStore((state) => state.recentStats)
+  const setRecentStats = useLottoStore((state) => state.setRecentStats)
+
+  const query = useQuery<Stat[]>({
     queryKey: ["lotto", "recent-stats"],
     queryFn: async () => {
       const res = await fetch("/api/lotto/recent-stats")
       if (!res.ok) throw new Error("Failed to fetch recent stats")
-      return res.json()
+
+      const data: Stat[] = await res.json()
+      setRecentStats(data as Stat[])
+      return data
     },
-    staleTime: 1000 * 60 * 60 * 24, // 24시간
-    gcTime: 1000 * 60 * 60 * 24 * 7, // 7일
-  })
+    enabled: recentStats.length === 0,
+    refetchInterval: 1000 * 60 * 30, 
+    staleTime: 1000 * 60 * 29,
+  })  
+
+  return {
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+  }
 }

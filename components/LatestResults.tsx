@@ -1,11 +1,15 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { LottoBall } from "./LottoBall"
 import { Card } from "@/components/ui/card"
 import { useLatestLotto } from "@/hooks/queries/useLatestLotto"
+import { useLottoStore } from "@/hooks/stores/useLottoStore"
+
 
 export function LatestResults() {
-  const { data: latestResult, isLoading, isError } = useLatestLotto()
+  const { latestResult } = useLottoStore()
+  const {isLoading, isError } = useLatestLotto()
 
   if (isLoading) {
     return (
@@ -15,7 +19,7 @@ export function LatestResults() {
     )
   }
 
-  if (isError || !latestResult) {
+  if (isError ||!latestResult) {
     return null
   }
 

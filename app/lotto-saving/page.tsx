@@ -9,7 +9,7 @@ import KakaoAd320x50 from "@/components/KakaoAd320x50"
 import KakaoAd320x100 from "@/components/KakaoAd320x100"
 import { Card } from "@/components/ui/card"
 
-import { LottoResult } from "@/hooks/stores/useLottoStore"
+import { useLottoStore, LottoResult } from "@/hooks/stores/useLottoStore"
 import { useLatestLotto } from "@/hooks/queries/useLatestLotto"
 import { useLottoByRound } from "@/hooks/queries/useLottoByRound"
 import { useLottoCapture } from "@/hooks/ui/useLottoCapture"
@@ -36,15 +36,17 @@ export default function LottoSavingPage() {
   const [openId, setOpenId] = useState<number | null>(null)
   const [page, setPage] = useState(1)
 
+  const last50Rounds = useLottoStore((state) => state.last50Rounds)
   const { data: latest, isLoading: isLatestLoading } = useLatestLotto()
+
   const [selectedRound, setSelectedRound] = useState<number | null>(null)
   const [roundOptions, setRoundOptions] = useState<number[]>([])
-
-  // 선택된 회차의 데이터를 가져오기
-  const { data: last20Rounds, isLoading: isRoundLoading } = useLottoByRound(selectedRound)
-
-  // winning 데이터: last20Rounds에서 찾고, 없으면 최신 회차 데이터 사용
-  const winning = last20Rounds?.find(r => r.round === selectedRound)
+  
+  // 선택된 회차의 데이터를 가져오기 (zustand에 자동 저장됨)
+  const { isLoading: isRoundLoading } = useLottoByRound(selectedRound)
+  
+  // winning 데이터: zustand에서 찾고, 없으면 최신 회차 데이터 사용
+  const winning = last50Rounds.find(r => r.round === selectedRound) 
     ?? (selectedRound === latest?.round ? latest : null)
 
   const receiptRef = useRef<HTMLDivElement>(null)
@@ -166,7 +168,7 @@ export default function LottoSavingPage() {
                 <Loader2 className="w-3 h-3 animate-spin" />
                 <span>로딩중...</span>
               </div>
-            ) : last20Rounds && last20Rounds.length >= 20 ? (
+            ) : last50Rounds.length >= 20 ? (
               <select
                 className="border px-2 py-1 rounded text-sm"
                 value={selectedRound ?? ""}

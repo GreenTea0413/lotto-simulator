@@ -8,7 +8,9 @@ export async function GET() {
     const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7))
     const currentRound = diffWeeks + 1
 
-    const response = await fetch(`https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${currentRound}`)
+    const response = await fetch(
+      `https://www.dhlottery.co.kr/lt645/selectPstLt645InfoNew.do?srchDir=center&srchLtEpsd=${currentRound}&srchCursorLtEpsd=${currentRound}`
+    )
 
     if (!response.ok) {
       throw new Error("Failed to fetch lottery data")
@@ -16,32 +18,27 @@ export async function GET() {
 
     const data = await response.json()
 
-    if (data.returnValue === "success") {
+    if (data.data?.list?.length) {
+      const item = data.data.list[0]
       return NextResponse.json({
-        round: data.drwNo,
-        date: data.drwNoDate,
-        numbers: [data.drwtNo1, data.drwtNo2, data.drwtNo3, data.drwtNo4, data.drwtNo5, data.drwtNo6],
-        bonus: data.bnusNo,
+        round: item.ltEpsd,
+        date: `${item.ltRflYmd.slice(0, 4)}-${item.ltRflYmd.slice(4, 6)}-${item.ltRflYmd.slice(6, 8)}`,
+        numbers: [item.tm1WnNo, item.tm2WnNo, item.tm3WnNo, item.tm4WnNo, item.tm5WnNo, item.tm6WnNo],
+        bonus: item.bnsWnNo,
       })
     }
     // 실패하면 이전 회차 데이터 가져오기
     const prevResponse = await fetch(
-      `https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${currentRound - 1}`,
+      `https://www.dhlottery.co.kr/lt645/selectPstLt645InfoNew.do?srchDir=center&srchLtEpsd=${currentRound - 1}&srchCursorLtEpsd=${currentRound - 1}`
     )
     const prevData = await prevResponse.json()
+    const prevItem = prevData.data.list[0]
 
     return NextResponse.json({
-      round: prevData.drwNo,
-      date: prevData.drwNoDate,
-      numbers: [
-        prevData.drwtNo1,
-        prevData.drwtNo2,
-        prevData.drwtNo3,
-        prevData.drwtNo4,
-        prevData.drwtNo5,
-        prevData.drwtNo6,
-      ],
-      bonus: prevData.bnusNo,
+      round: prevItem.ltEpsd,
+      date: `${prevItem.ltRflYmd.slice(0, 4)}-${prevItem.ltRflYmd.slice(4, 6)}-${prevItem.ltRflYmd.slice(6, 8)}`,
+      numbers: [prevItem.tm1WnNo, prevItem.tm2WnNo, prevItem.tm3WnNo, prevItem.tm4WnNo, prevItem.tm5WnNo, prevItem.tm6WnNo],
+      bonus: prevItem.bnsWnNo,
     })
   } catch (error) {
     console.error("Error fetching lottery data:", error)

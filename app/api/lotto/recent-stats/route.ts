@@ -13,15 +13,18 @@ export async function GET() {
 
     for (let i = 0; i < recentRounds; i++) {
       const round = currentRound - i
-      const res = await fetch(`https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${round}`)
+      const res = await fetch(
+        `https://www.dhlottery.co.kr/lt645/selectPstLt645InfoNew.do?srchDir=center&srchLtEpsd=${round}&srchCursorLtEpsd=${round}`
+      )
       const data = await res.json()
 
-      if (data.returnValue !== "success") continue
+      if (!data.data?.list?.length) continue
 
+      const item = data.data.list[0]
       const numbers = [
-        data.drwtNo1, data.drwtNo2, data.drwtNo3,
-        data.drwtNo4, data.drwtNo5, data.drwtNo6,
-        data.bnusNo
+        item.tm1WnNo, item.tm2WnNo, item.tm3WnNo,
+        item.tm4WnNo, item.tm5WnNo, item.tm6WnNo,
+        item.bnsWnNo
       ]
 
       numbers.forEach(num => {

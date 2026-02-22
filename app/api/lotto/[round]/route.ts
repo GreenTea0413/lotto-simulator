@@ -10,26 +10,20 @@ export async function GET(request: Request, context: { params?: { round?: string
 
   try {
     const response = await fetch(
-      `https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${round}`
+      `https://www.dhlottery.co.kr/lt645/selectPstLt645InfoNew.do?srchDir=center&srchLtEpsd=${round}&srchCursorLtEpsd=${round}`
     )
     const data = await response.json()
 
-    if (data.returnValue !== "success") {
+    if (!data.data?.list?.length) {
       return NextResponse.json({ error: "Invalid round or not yet drawn" }, { status: 404 })
     }
 
+    const item = data.data.list[0]
     return NextResponse.json({
-      round: data.drwNo,
-      date: data.drwNoDate,
-      numbers: [
-        data.drwtNo1,
-        data.drwtNo2,
-        data.drwtNo3,
-        data.drwtNo4,
-        data.drwtNo5,
-        data.drwtNo6,
-      ],
-      bonus: data.bnusNo,
+      round: item.ltEpsd,
+      date: `${item.ltRflYmd.slice(0, 4)}-${item.ltRflYmd.slice(4, 6)}-${item.ltRflYmd.slice(6, 8)}`,
+      numbers: [item.tm1WnNo, item.tm2WnNo, item.tm3WnNo, item.tm4WnNo, item.tm5WnNo, item.tm6WnNo],
+      bonus: item.bnsWnNo,
     })
   } catch (error) {
     console.error("Lotto API error:", error)

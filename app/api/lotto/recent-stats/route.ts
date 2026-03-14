@@ -11,23 +11,30 @@ export async function GET() {
     const recentRounds = 5
     const frequencyMap = new Map<number, number>()
 
-    for (let i = 0; i < recentRounds; i++) {
-      const round = currentRound - i
-      const res = await fetch(
-        `https://www.dhlottery.co.kr/lt645/selectPstLt645InfoNew.do?srchDir=center&srchLtEpsd=${round}&srchCursorLtEpsd=${round}`
-      )
-      const data = await res.json()
+    // API는 srchLtEpsd와 무관하게 항상 최근 10회차 목록을 반환하므로
+    // 한 번만 호출하고 list에서 최근 5회차를 처리
+    const res = await fetch(
+      `https://www.dhlottery.co.kr/lt645/selectPstLt645InfoNew.do?srchDir=center&srchLtEpsd=${currentRound}&srchCursorLtEpsd=${currentRound}`
+    )
+    const data = await res.json()
 
-      if (!data.data?.list?.length) continue
+    // 최신 회차가 아직 없으면 이전 회차로 재시도
+    const list = data.data?.list?.length
+      ? data.data.list
+      : await fetch(
+          `https://www.dhlottery.co.kr/lt645/selectPstLt645InfoNew.do?srchDir=center&srchLtEpsd=${currentRound - 1}&srchCursorLtEpsd=${currentRound - 1}`
+        ).then(r => r.json()).then(d => d.data?.list ?? [])
 
-      const item = data.data.list[0]
+    const targetItems = list.slice(0, recentRounds)
+
+    for (const item of targetItems) {
       const numbers = [
         item.tm1WnNo, item.tm2WnNo, item.tm3WnNo,
         item.tm4WnNo, item.tm5WnNo, item.tm6WnNo,
         item.bnsWnNo
       ]
 
-      numbers.forEach(num => {
+      numbers.forEach((num: number) => {
         frequencyMap.set(num, (frequencyMap.get(num) || 0) + 1)
       })
     }

@@ -181,10 +181,10 @@ export default function LottoSavingPage() {
 
             <div className="relative flex items-center">
               {(isLatestLoading || isRoundLoading) && (
-                <Loader2 className="absolute right-5 w-3 h-3 animate-spin text-muted-foreground pointer-events-none" />
+                <Loader2 className="absolute right-2 w-3 h-3 animate-spin text-muted-foreground pointer-events-none" />
               )}
               <select
-                className="border px-2 py-1 rounded text-sm disabled:opacity-60"
+                className={`border px-2 py-1 rounded text-sm disabled:opacity-60 ${(isLatestLoading || isRoundLoading) ? "appearance-none pr-6" : ""}`}
                 value={selectedRound ?? ""}
                 onChange={(e) => setSelectedRound(parseInt(e.target.value))}
                 disabled={isLatestLoading}

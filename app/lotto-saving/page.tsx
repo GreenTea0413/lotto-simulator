@@ -31,10 +31,13 @@ const lottoRanks = [
   { label: "꽝", color: "bg-gray-200 border-gray-100" }
 ]
 
+type SortOrder = "newest" | "oldest" | "rank"
+
 export default function LottoSavingPage() {
   const [saved, setSaved] = useState<SavedLotto[]>([])
   const [openId, setOpenId] = useState<number | null>(null)
   const [page, setPage] = useState(1)
+  const [sortOrder, setSortOrder] = useState<SortOrder>("newest")
 
   const last50Rounds = useLottoStore((state) => state.last50Rounds)
   const { data: latest, isLoading: isLatestLoading } = useLatestLotto()
@@ -99,7 +102,21 @@ export default function LottoSavingPage() {
     )[0]
   }
 
-  const paginated = saved.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const getBestRankIndex = (item: SavedLotto) => {
+    const ranks = item.sets.map(getRank)
+    return ranks.reduce((best, rank) => {
+      const idx = lottoRanks.findIndex(r => r.label === rank)
+      return idx < best ? idx : best
+    }, lottoRanks.length - 1)
+  }
+
+  const sortedSaved = [...saved].sort((a, b) => {
+    if (sortOrder === "newest") return b.id - a.id
+    if (sortOrder === "oldest") return a.id - b.id
+    return getBestRankIndex(a) - getBestRankIndex(b)
+  })
+
+  const paginated = sortedSaved.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
   const totalPages = Math.ceil(saved.length / PAGE_SIZE)
 
   const toggleOpen = (id: number) =>
@@ -220,6 +237,25 @@ export default function LottoSavingPage() {
             </div>
           </Card>
         ) : null}
+
+        {/* ✅ 정렬 옵션 */}
+        {saved.length > 0 && (
+          <div className="flex gap-2 justify-end">
+            {(["newest", "oldest", "rank"] as SortOrder[]).map((order) => (
+              <button
+                key={order}
+                onClick={() => { setSortOrder(order); setPage(1) }}
+                className={`text-xs px-3 py-1 rounded-full border transition-colors ${
+                  sortOrder === order
+                    ? "bg-foreground text-background border-foreground"
+                    : "text-muted-foreground border-gray-300 hover:border-gray-400"
+                }`}
+              >
+                {order === "newest" ? "최신순" : order === "oldest" ? "과거순" : "등수순"}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* ✅ 저장 번호 */}
         {saved.length === 0 ? (

@@ -179,29 +179,25 @@ export default function LottoSavingPage() {
               </div>
             </div>
 
-            {/* 로딩 인디케이터 추가 */}
-            {isLatestLoading ? (
-              <div className="border px-2 py-1 rounded text-sm flex items-center gap-1">
-                <Loader2 className="w-3 h-3 animate-spin" />
-                <span>로딩중...</span>
-              </div>
-            ) : last50Rounds.length >= 20 ? (
+            <div className="relative flex items-center">
+              {(isLatestLoading || isRoundLoading) && (
+                <Loader2 className="absolute right-5 w-3 h-3 animate-spin text-muted-foreground pointer-events-none" />
+              )}
               <select
-                className="border px-2 py-1 rounded text-sm"
+                className="border px-2 py-1 rounded text-sm disabled:opacity-60"
                 value={selectedRound ?? ""}
                 onChange={(e) => setSelectedRound(parseInt(e.target.value))}
+                disabled={isLatestLoading}
               >
-                {roundOptions.map((n) => (
-                  <option key={n} value={n}>
-                    {n}회차
-                  </option>
-                ))}
+                {roundOptions.length > 0 ? (
+                  roundOptions.map((n) => (
+                    <option key={n} value={n}>{n}회차</option>
+                  ))
+                ) : (
+                  <option value="">-- 회차 --</option>
+                )}
               </select>
-            ) : (
-              <div className="border px-2 py-1 rounded text-sm flex items-center gap-1">
-                <span>{selectedRound}회차</span>
-              </div>
-            )}
+            </div>
           </div>
         </div>
 

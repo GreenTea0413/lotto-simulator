@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import KakaoMap from "@/components/KakaoMap"
 import NearbySpots from "@/components/NearbySpots"
-import { luckySpots } from "@/data/luckySpots"
+import { luckySpots, type LuckySpot } from "@/data/luckySpots"
 import { getDistance } from "@/lib/getDistance"
 import { loadKakaoMapScript } from "@/lib/loadKakaoMapScript"
 import { MapPin } from "lucide-react"
@@ -18,7 +18,7 @@ export default function LuckyMapSection() {
     lat: 37.5665,
     lng: 126.9780,
   })
-  const [visibleSpots, setVisibleSpots] = useState<typeof luckySpots>([])
+  const [visibleSpots, setVisibleSpots] = useState<LuckySpot[]>([])
   const [sdkLoaded, setSdkLoaded] = useState(false)
 
   useEffect(() => {

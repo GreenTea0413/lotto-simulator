@@ -1,4 +1,6 @@
-// 동행복권 1등 당첨 판매점 자동 수집 스크립트
+// 동행복권 1등 당첨 판매점 수동 수집 스크립트
+// 결과를 stdout으로 출력하므로 luckySpots.ts에 직접 붙여넣기 필요
+// 자동 업데이트(파일 직접 수정)는 auto_update_spots.mjs 사용
 // 사용법: node update_spots.mjs <시작회차> <끝회차>
 // 예시: node update_spots.mjs 1213 1220
 

@@ -1,4 +1,11 @@
-export const luckySpots = [
+export type LuckySpot = {
+  name: string;
+  address: string;
+  lat: number;
+  lng: number;
+};
+
+export const luckySpots: LuckySpot[] = [
   {
     name: "그린마트",
     address: "경기 성남시 분당구 대왕판교로 255 107호",

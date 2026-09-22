@@ -36,6 +36,7 @@ export default function Home() {
         {/* <KakaoAd320x50 /> */}
         <h1 className="sr-only">로또 6/45 번호 생성기</h1>
         <LatestResults />
+        {lottoSets.length > 0 && <LottoReceipt lottoSets={lottoSets} />}
         <Button
           onClick={generateLottoNumbers}
           disabled={isGenerating}
@@ -44,7 +45,6 @@ export default function Home() {
         >
           {isGenerating ? "생성 중..." : "번호 생성하기"}
         </Button>
-        {lottoSets.length > 0 && <LottoReceipt lottoSets={lottoSets} />}
         {/* <KakaoAd320x100 /> */}
       </div>
     </div>

@@ -143,7 +143,7 @@ export default function LottoSavingPage() {
   const isDataLoading = isRoundLoading && !winning
 
   return (
-    <main className="min-h-screen bg-background py-8 px-4 mb-16">
+    <div className="py-8 px-4">
       <div className="max-w-md mx-auto space-y-6">
 
         {/* <KakaoAd320x50 /> */}
@@ -260,7 +260,7 @@ export default function LottoSavingPage() {
             <p className="text-xs text-gray-400">로또 번호를 생성하고 저장해보세요!</p>
           </div>
         ) : (
-          <div className="space-y-4 min-h-[740px] flex flex-col justify-between">
+          <div className="space-y-4">
             <div className="space-y-4">
               {paginated.map((item) => {
                 const borderClass = getCardBorder(item)
@@ -334,6 +334,6 @@ export default function LottoSavingPage() {
 
         {/* <KakaoAd320x100 /> */}
       </div>
-    </main>
+    </div>
   )
 }

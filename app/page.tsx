@@ -31,7 +31,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-background py-8 px-4 mb-16">
+    <div className="py-8 px-4">
       <div className="max-w-md mx-auto space-y-8">
         {/* <KakaoAd320x50 /> */}
         <div className="text-center space-y-2">
@@ -50,6 +50,6 @@ export default function Home() {
         {lottoSets.length > 0 && <LottoReceipt lottoSets={lottoSets} />}
         {/* <KakaoAd320x100 /> */}
       </div>
-    </main>
+    </div>
   )
 }

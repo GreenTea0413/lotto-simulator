@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import LottoNav from '@/components/LottoNav'
+import Image from 'next/image'
+import Link from 'next/link'
 // import Script from 'next/script'
 import { Providers } from './providers'
 // import KakaoAd160x600Left from '@/components/KakaoAd160x600Left'
@@ -76,6 +78,12 @@ export default function RootLayout({
 
             {/* 메인 콘텐츠 (모바일 중심 max-w-md) */}
             <main className="w-full max-w-md mx-auto xl:mx-0">
+              <header className="mx-4 pt-8 pb-3 border-b border-gray-200">
+                <Link href="/" className="flex items-center gap-2 w-fit">
+                  <Image src="/icon-192x192.png" alt="LottoSimm 로고" width={32} height={32} priority />
+                  <span className="text-lg font-bold font-mono">LottoSimm</span>
+                </Link>
+              </header>
               {children}
               <Analytics />
               <LottoNav />

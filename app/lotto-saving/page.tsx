@@ -21,7 +21,7 @@ interface SavedLotto {
   sets: number[][]
 }
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 5
 
 const lottoRanks = [
   { label: "1등", color: "bg-yellow-400 border-yellow-400 text-yellow-500 shadow-yellow-400" },
@@ -47,7 +47,7 @@ export default function LottoSavingPage() {
   const [roundOptions, setRoundOptions] = useState<number[]>([])
   
   // 선택된 회차의 데이터를 가져오기 (zustand에 자동 저장됨)
-  const { isLoading: isRoundLoading } = useLottoByRound(selectedRound)
+  const { isLoading: isRoundLoading, isError: isRoundError } = useLottoByRound(selectedRound)
   
   // winning 데이터: zustand에서 찾고, 없으면 최신 회차 데이터 사용
   const winning = last50Rounds.find(r => r.round === selectedRound) 
@@ -127,41 +127,19 @@ export default function LottoSavingPage() {
 
         <h2 className="sr-only">내 번호</h2>
 
-        {/* ✅ 등수별 색상 */}
-        <div className="flex justify-center gap-3 text-xs">
-          {lottoRanks
-            .filter((r) => r.label !== "꽝")
-            .map((rank) => (
-              <div key={rank.label} className="flex items-center gap-1">
-                <span className={`w-2.5 h-2.5 rounded-full ${getRankBg(rank.label)}`} />
-                <span>{rank.label}</span>
-              </div>
-            ))}
-        </div>
-
-        {/* ✅ 최근 20회 최고 등수 */}
-        {saved.length > 0 && last50Rounds.length > 0 && (
-          <button
-            onClick={() => bestInRecent && setSelectedRound(bestInRecent.round)}
-            disabled={!bestInRecent}
-            className={`w-full flex justify-between items-center px-4 py-3 rounded-lg border-2 text-sm ${bestInRecent ? getRankColor(bestInRecent.rank) : "border-gray-200"}`}
-          >
-            <span className="text-muted-foreground">최근 20회 최고 등수</span>
-            {bestInRecent ? (
-              <span className="flex items-center gap-1 font-bold">
-                {bestInRecent.round}회 · {bestInRecent.rank}
-                <ChevronRight size={16} />
-              </span>
-            ) : (
-              <span className="text-muted-foreground">당첨 없음</span>
-            )}
-          </button>
-        )}
-
-        {/* ✅ 회차 선택 + 당첨 번호 */}
+        {/* ✅ 등수별 색상 + 회차 선택 + 당첨 번호 */}
         <Card className="p-4 space-y-3">
           <div className="flex justify-between items-center">
-            <h2 className="text-sm font-bold font-mono">당첨번호</h2>
+            <div className="flex gap-2 text-xs">
+              {lottoRanks
+                .filter((r) => r.label !== "꽝")
+                .map((rank) => (
+                  <div key={rank.label} className="flex items-center gap-1">
+                    <span className={`w-2 h-2 rounded-full ${getRankBg(rank.label)}`} />
+                    <span>{rank.label}</span>
+                  </div>
+                ))}
+            </div>
             <div className="relative flex items-center">
               {(isLatestLoading || isRoundLoading) && (
                 <Loader2 className="absolute right-2 w-3 h-3 animate-spin text-muted-foreground pointer-events-none" />
@@ -197,6 +175,32 @@ export default function LottoSavingPage() {
             </div>
           )}
         </Card>
+
+        {/* ✅ 최근 20회 최고 등수 */}
+        {/* 자리를 먼저 잡아두고, 20회차 데이터가 오면 값만 바꿔서 레이아웃이 튀지 않게 함 */}
+        <button
+          onClick={() => bestInRecent && setSelectedRound(bestInRecent.round)}
+          disabled={!bestInRecent}
+          className={`w-full flex justify-between items-center px-4 py-3 rounded-lg border-2 text-sm transition-colors ${bestInRecent ? getRankColor(bestInRecent.rank) : "border-gray-200"}`}
+        >
+          <span className="text-muted-foreground">최근 20회 최고 등수</span>
+          {last50Rounds.length === 0 && isRoundError ? (
+            <span className="text-muted-foreground">불러오지 못했어요</span>
+          ) : last50Rounds.length === 0 ? (
+            <span className="flex items-center gap-1 text-muted-foreground">
+              <Loader2 className="w-3 h-3 animate-spin" />
+              확인 중...
+            </span>
+          ) : bestInRecent ? (
+            <span className="flex items-center gap-1 font-bold">
+              {bestInRecent.round}회 · {bestInRecent.rank}
+              <ChevronRight size={16} />
+            </span>
+          ) : (
+            <span className="text-muted-foreground">당첨 없음</span>
+          )}
+        </button>
+
 
         {/* ✅ 정렬 옵션 */}
         {saved.length > 0 && (

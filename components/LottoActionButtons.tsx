@@ -1,36 +1,44 @@
-import { ImageDown, Share2, Save, Trash2 } from "lucide-react"
+import { ImageDown, Share2, Save, Dices, Trash2 } from "lucide-react"
 
 interface Props {
   onDownload?: () => void
   onShare?: () => void
   onSave?: () => void
   onDelete?: () => void
+  onGenerate?: () => void
 }
 
 const primaryStyle: React.CSSProperties = { backgroundColor: "#000", color: "#fff", borderColor: "#000" }
 
-export function LottoActionButtons({ onDownload, onShare, onSave, onDelete }: Props) {
+export function LottoActionButtons({ onDownload, onShare, onSave, onDelete, onGenerate }: Props) {
   // 저장 버튼이 있으면 저장이 주 동작, 없으면 공유가 주 동작
   return (
     <div style={{ display: "flex", gap: "12px" }}>
       {onDownload && (
         <button onClick={onDownload} style={btnStyle}>
           <ImageDown size={14} />
-          이미지 저장
+          이미지
         </button>
       )}
 
       {onShare && (
         <button onClick={onShare} style={onSave ? btnStyle : { ...btnStyle, ...primaryStyle }}>
           <Share2 size={14} />
-          공유하기
+          공유
         </button>
       )}
 
       {onSave && (
         <button onClick={onSave} style={{ ...btnStyle, ...primaryStyle }}>
           <Save size={14} />
-          번호 저장
+          저장
+        </button>
+      )}
+
+      {onGenerate && (
+        <button onClick={onGenerate} style={btnStyle}>
+          <Dices size={14} />
+          생성
         </button>
       )}
 

@@ -4,6 +4,7 @@ import { luckySpots } from "@/data/luckySpots"
 import { getDistance } from "@/lib/getDistance"
 import { MapPin, Navigation } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 type Props = {
   userLocation: { lat: number; lng: number } | null
@@ -12,7 +13,7 @@ type Props = {
 export default function NearbySpots({ userLocation }: Props) {
   if (!userLocation) return null
 
-  const top3 = luckySpots
+  const top10 = luckySpots
     .map((spot) => ({
       ...spot,
       distance: getDistance(userLocation.lat, userLocation.lng, spot.lat, spot.lng),
@@ -21,72 +22,23 @@ export default function NearbySpots({ userLocation }: Props) {
     .slice(0, 10)
 
   return (
-    <div style={{ marginTop: "24px" }}>
-      <h2
-        style={{
-          fontSize: "18px",
-          fontWeight: "bold",
-          fontFamily: "'Courier New', monospace",
-          marginBottom: "16px",
-          color: "#1f2937",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-        }}
-      >
-        <MapPin size={20} style={{ color: "#22c55e" }} />
+    <Card className="p-4 space-y-3">
+      <h2 className="flex items-center gap-2 text-sm font-bold font-mono">
+        <MapPin size={16} className="text-green-500" />
         가까운 명당 TOP 10
       </h2>
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        {top3.map((spot, idx) => (
-          <div
-            key={spot.address}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              background: "white",
-              padding: "16px",
-              borderRadius: "8px",
-              border: "2px dashed #d1d5db",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-              transition: "all 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#22c55e"
-              e.currentTarget.style.transform = "translateY(-2px)"
-              e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#d1d5db"
-              e.currentTarget.style.transform = "translateY(0)"
-              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.05)"
-            }}
-          >
-            <div>
-              <p
-                style={{
-                  fontWeight: "600",
-                  fontFamily: "'Courier New', monospace",
-                  fontSize: "15px",
-                  color: "#1f2937",
-                  marginBottom: "4px",
-                }}
-              >
+      <ul className="divide-y divide-border">
+        {top10.map((spot, idx) => (
+          <li key={spot.address} className="flex justify-between items-center gap-3 py-3">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold truncate">
                 {idx + 1}. {spot.name}
               </p>
-              <p
-                style={{
-                  fontSize: "13px",
-                  color: "#6b7280",
-                  fontFamily: "'Courier New', monospace",
-                }}
-              >
-                약 {spot.distance.toFixed(2)} km
-              </p>
+              <p className="text-xs text-muted-foreground">약 {spot.distance.toFixed(2)} km</p>
             </div>
             <Button
               size="sm"
+              variant="outline"
               onClick={() => {
                 window.open(
                   `https://map.kakao.com/link/to/${encodeURIComponent(spot.name)},${spot.lat},${spot.lng}`,
@@ -94,16 +46,13 @@ export default function NearbySpots({ userLocation }: Props) {
                   "noopener,noreferrer",
                 )
               }}
-              style={{
-                fontFamily: "'Courier New', monospace",
-              }}
             >
               <Navigation size={14} />
               길찾기
             </Button>
-          </div>
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </Card>
   )
 }

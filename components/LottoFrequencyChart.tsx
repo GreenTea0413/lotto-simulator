@@ -1,7 +1,7 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
+import { useMemo } from "react"
+import { Card } from "@/components/ui/card"
 import { useRecentStats } from "@/hooks/queries/useRecentStats"
 import { useLottoStore } from "@/hooks/stores/useLottoStore"
 
@@ -16,7 +16,6 @@ function getNumberColor(num: number) {
 export default function LottoFrequencyChart() {
   const { recentStats } = useLottoStore()
   const { isLoading, isError } = useRecentStats()
-  const [hoveredNumber, setHoveredNumber] = useState<number | null>(null)
 
   const stats = useMemo(() => {
     if (!recentStats) return { max: 0, avg: 0, total: 0 }
@@ -48,54 +47,7 @@ export default function LottoFrequencyChart() {
   }
 
   return (
-    <div className="w-full space-y-8">
-      {/* 출현 빈도 분포 카드 */}
-      <Card className="p-4 space-y-3">
-        <div className="flex flex-col space-y-1">
-          <h2 className="text-sm font-bold font-mono">출현 빈도 분포</h2>
-          <span className="text-xs text-muted-foreground font-mono">숫자 1 ~ 45까지의 횟수</span>
-        </div>
-
-        <CardContent>
-          <div className="space-y-3">
-            {recentStats.map((item) => {
-              const percentage = (item.freq / stats.max) * 100
-              const color = getNumberColor(item.number)
-
-              return (
-                <div
-                  key={item.number}
-                  className="group cursor-pointer"
-                  onMouseEnter={() => setHoveredNumber(item.number)}
-                  onMouseLeave={() => setHoveredNumber(null)}
-                >
-                  <div className="flex items-center gap-4 mb-1.5">
-                    <div className="text-center font-bold text-sm min-w-10" style={{ color: color.backgroundColor }}>
-                      {item.number}
-                    </div>
-                    <div className="flex-1">
-                      <div className="relative h-4 bg-white/5 rounded-full overflow-hidden border border-white/10 backdrop-blur-sm">
-                        <div
-                          className="h-full rounded-full transition-all duration-500 relative overflow-hidden"
-                          style={{
-                            width: `${percentage}%`,
-                            backgroundColor: color.backgroundColor,
-                            boxShadow: `0 0 20px ${color.backgroundColor}40`,
-                          }}
-                        >
-                          <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-pulse" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right min-w-12 text-sm font-semibold text-foreground">{item.freq}회</div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </CardContent>
-      </Card>
-
+    <div className="w-full space-y-6">
       {/* Top 3 카드 */}
       <Card className="p-4 space-y-3">
         <div className="flex flex-col space-y-1">
@@ -107,13 +59,10 @@ export default function LottoFrequencyChart() {
             const color = getNumberColor(num.number)
             const rankEmoji = ["🥇", "🥈", "🥉"][idx]
             return (
-              <div
-                key={num.number}
-                className="backdrop-blur-xl from-white/10 to-white/5 border border-white/20 rounded-2xl text-center hover:from-white/15 hover:to-white/10 transition-all duration-300"
-              >
-                <div className="text-2xl mb-3">{rankEmoji}</div>
+              <div key={num.number} className="py-3 border border-border rounded-2xl text-center">
+                <div className="text-2xl mb-2">{rankEmoji}</div>
                 <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl mx-auto mb-3 shadow-lg"
+                  className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-2 shadow-lg"
                   style={{
                     backgroundColor: color.backgroundColor,
                     color: color.textColor,
@@ -122,8 +71,36 @@ export default function LottoFrequencyChart() {
                 >
                   {num.number}
                 </div>
-                <p className="text-xs text-muted-foreground mb-1">출현 횟수</p>
-                <p className="text-2xl font-bold text-foreground">{num.freq}회</p>
+                <p className="text-xs text-muted-foreground">출현 횟수</p>
+                <p className="text-xl font-bold text-foreground">{num.freq}회</p>
+              </div>
+            )
+          })}
+        </div>
+      </Card>
+
+      {/* 출현 빈도 분포: 1~45 격자, 많이 나올수록 진하게 */}
+      <Card className="p-4 space-y-3">
+        <div className="flex flex-col space-y-1">
+          <h2 className="text-sm font-bold font-mono">출현 빈도 분포</h2>
+          <span className="text-xs text-muted-foreground font-mono">숫자 1 ~ 45까지의 횟수 · 진할수록 많이 나옴</span>
+        </div>
+        <div className="grid grid-cols-9 gap-1.5">
+          {recentStats.map((item) => {
+            const color = getNumberColor(item.number)
+            const ratio = stats.max ? item.freq / stats.max : 0
+            return (
+              <div
+                key={item.number}
+                className="aspect-square rounded-lg flex flex-col items-center justify-center border border-border"
+                style={{ backgroundColor: item.freq ? `${color.backgroundColor}${Math.round((0.2 + ratio * 0.8) * 255).toString(16).padStart(2, "0")}` : undefined }}
+              >
+                <span className="text-sm font-bold leading-none" style={{ color: ratio > 0.5 ? color.textColor : undefined }}>
+                  {item.number}
+                </span>
+                <span className="text-[10px] leading-none mt-0.5" style={{ color: ratio > 0.5 ? color.textColor : "var(--muted-foreground)" }}>
+                  {item.freq}
+                </span>
               </div>
             )
           })}

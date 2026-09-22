@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+import { Toaster } from '@/components/ui/sonner'
 import LottoNav from '@/components/LottoNav'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -47,6 +48,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: '#ffffff',
   colorScheme: 'light',
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({
@@ -83,15 +85,18 @@ export default function RootLayout({
 
             {/* 메인 콘텐츠 (모바일 중심 max-w-md) */}
             <main className="w-full max-w-md mx-auto xl:mx-0 pb-24">
-              <header className="mx-4 pt-8 pb-3 border-b border-gray-200">
-                <Link href="/" className="flex items-center gap-2 w-fit">
-                  <Image src="/icon-192x192.png" alt="LottoSimm 로고" width={32} height={32} priority />
-                  <span className="text-lg font-bold font-mono">LottoSimm</span>
-                </Link>
+              <header className="sticky top-0 z-40 bg-background px-4">
+                <div className="pt-4 pb-3 border-b border-gray-200">
+                  <Link href="/" className="flex items-center gap-2 w-fit">
+                    <Image src="/icon-192x192.png" alt="LottoSimm 로고" width={32} height={32} priority />
+                    <span className="text-lg font-bold font-mono">LottoSimm</span>
+                  </Link>
+                </div>
               </header>
               {children}
               <Analytics />
               <LottoNav />
+              <Toaster theme="light" position="top-center" />
             </main>
 
             {/* 오른쪽 사이드 광고 (PC only - 1280px 이상) */}

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Crown, Trash2, Loader2 } from "lucide-react"
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Trash2, Loader2 } from "lucide-react"
 import { LottoReceiptView } from "@/components/LottoReceiptView"
 import { LottoActionButtons } from "@/components/LottoActionButtons"
 import { LottoBall } from "@/components/LottoBall"
@@ -9,7 +9,8 @@ import { LottoBall } from "@/components/LottoBall"
 // import KakaoAd320x100 from "@/components/KakaoAd320x100"
 import { Card } from "@/components/ui/card"
 
-import { useLottoStore, LottoResult } from "@/hooks/stores/useLottoStore"
+import { useLottoStore } from "@/hooks/stores/useLottoStore"
+import { getRank, bestRank, RANK_ORDER, type Rank } from "@/lib/checkRank"
 import { useLatestLotto } from "@/hooks/queries/useLatestLotto"
 import { useLottoByRound } from "@/hooks/queries/useLottoByRound"
 import { useLottoCapture } from "@/hooks/ui/useLottoCapture"
@@ -70,67 +71,29 @@ export default function LottoSavingPage() {
     setSelectedRound(latestRound)
   }, [latest])
 
-  const getRank = (set: number[]) => (winning ? rankOf(set, winning) : "꽝")
-
-  const rankOf = (set: number[], winning: LottoResult) => {
-    const match = set.filter((n) => winning.numbers.includes(n)).length
-    const bonusMatch = set.includes(winning.bonus)
-
-    if (match === 6) return "1등"
-    if (match === 5 && bonusMatch) return "2등"
-    if (match === 5) return "3등"
-    if (match === 4) return "4등"
-    if (match === 3) return "5등"
-    return "꽝"
-  }
-
-  const rankIndex = (rank: string) => lottoRanks.findIndex(r => r.label === rank)
+  const rankOf = (set: number[]): Rank => (winning ? getRank(set, winning) : "꽝")
+  const itemRank = (item: SavedLotto) => bestRank(item.sets.map(rankOf))
 
   // 최근 20회 전체에서 저장 번호의 최고 등수 (동률이면 최신 회차)
   const bestInRecent = last50Rounds
     .filter((w) => w.numbers)
-    .reduce<{ round: number; rank: string } | null>((best, w) => {
-      const rank = saved
-        .flatMap((item) => item.sets)
-        .map((set) => rankOf(set, w))
-        .reduce((a, b) => (rankIndex(a) <= rankIndex(b) ? a : b), "꽝")
+    .reduce<{ round: number; rank: Rank } | null>((best, w) => {
+      const rank = bestRank(saved.flatMap((item) => item.sets).map((set) => getRank(set, w)))
       if (rank === "꽝") return best
-      if (!best || rankIndex(rank) < rankIndex(best.rank)) return { round: w.round, rank }
-      if (rankIndex(rank) === rankIndex(best.rank) && w.round > best.round) return { round: w.round, rank }
-      return best
+      const diff = best ? RANK_ORDER.indexOf(rank) - RANK_ORDER.indexOf(best.rank) : -1
+      return diff < 0 || (diff === 0 && w.round > best!.round) ? { round: w.round, rank } : best
     }, null)
 
   const getRankColor = (rank: string) =>
     lottoRanks.find(r => r.label === rank)?.color.split(" ")[1] || "border-gray-200"
 
-  const getCardBorder = (item: SavedLotto) => {
-    const ranks = item.sets.map(getRank)
-    const bestRank = ranks.sort(
-      (a, b) => lottoRanks.findIndex(r => r.label === a) - lottoRanks.findIndex(r => r.label === b)
-    )[0]
-    return getRankColor(bestRank)
-  }
-
-  const getOverallBestRank = () => {
-    if (!saved.length || !winning) return "등수없음"
-    const allRanks = saved.flatMap((item) => item.sets.map(getRank))
-    return allRanks.sort(
-      (a, b) => lottoRanks.findIndex(r => r.label === a) - lottoRanks.findIndex(r => r.label === b)
-    )[0]
-  }
-
-  const getBestRankIndex = (item: SavedLotto) => {
-    const ranks = item.sets.map(getRank)
-    return ranks.reduce((best, rank) => {
-      const idx = lottoRanks.findIndex(r => r.label === rank)
-      return idx < best ? idx : best
-    }, lottoRanks.length - 1)
-  }
+  const getRankBg = (rank: string) =>
+    lottoRanks.find(r => r.label === rank)?.color.split(" ")[0] || "bg-gray-200"
 
   const sortedSaved = [...saved].sort((a, b) => {
     if (sortOrder === "newest") return b.id - a.id
     if (sortOrder === "oldest") return a.id - b.id
-    return getBestRankIndex(a) - getBestRankIndex(b)
+    return RANK_ORDER.indexOf(itemRank(a)) - RANK_ORDER.indexOf(itemRank(b))
   })
 
   const paginated = sortedSaved.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
@@ -153,9 +116,6 @@ export default function LottoSavingPage() {
     setPage(1)
   }
 
-  const overallRank = getOverallBestRank()
-  const rankColor = getRankColor(overallRank)
-
   // 데이터 로딩 상태 표시
   const isDataLoading = isRoundLoading && !winning
 
@@ -166,7 +126,7 @@ export default function LottoSavingPage() {
         {/* <KakaoAd320x50 /> */}
 
         <div className="text-center space-y-1">
-          <h2 className="text-2xl font-bold">저장한 번호</h2>
+          <h2 className="text-2xl font-bold">내 번호</h2>
           <p className="text-sm text-gray-500">회차별 당첨 결과를 확인해보세요!</p>
         </div>
 
@@ -189,32 +149,10 @@ export default function LottoSavingPage() {
           </button>
         )}
 
-        {/* ✅ 회차 선택 */}
-        <div className="flex justify-between items-center">
-          <div className="flex flex-row gap-2 text-xs">
-            {lottoRanks
-              .filter(r => r.label !== "꽝")
-              .map((rank) => (
-                <div key={rank.label} className="flex items-center gap-1">
-                  <span className={`w-2 h-2 rounded-full ${rank.color.split(" ")[0]}`} />
-                  <span>{rank.label}</span>
-                </div>
-              ))}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              {overallRank !== "등수없음" && (
-                <span className="absolute -top-3 left-0 -translate-x-1/2 text-yellow-400">
-                  <Crown className="w-4 h-4" stroke="orange" fill="gold" />
-                </span>
-              )}
-
-              <div className={`w-16 px-2 py-1 text-xs text-center rounded-full border ${rankColor}`}>
-                {overallRank === "등수없음" ? "N/A" : overallRank}
-              </div>
-            </div>
-
+        {/* ✅ 회차 선택 + 당첨 번호 */}
+        <Card className="p-4 space-y-3">
+          <div className="flex justify-between items-center">
+            <h2 className="text-sm font-bold font-mono">당첨번호</h2>
             <div className="relative flex items-center">
               {(isLatestLoading || isRoundLoading) && (
                 <Loader2 className="absolute right-2 w-3 h-3 animate-spin text-muted-foreground pointer-events-none" />
@@ -235,31 +173,8 @@ export default function LottoSavingPage() {
               </select>
             </div>
           </div>
-        </div>
 
-        {/* ✅ 당첨 번호 - 로딩 상태 개선 */}
-        {isDataLoading ? (
-          <Card className="p-4 space-y-3">
-            <div className="flex justify-between items-center">
-              <h2 className="text-sm font-bold font-mono">당첨번호</h2>
-              <span className="text-xs text-muted-foreground font-mono flex items-center gap-1">
-                <Loader2 className="w-3 h-3 animate-spin" />
-                로딩중...
-              </span>
-            </div>
-            <div className="flex gap-2 justify-center items-center h-12">
-              <div className="text-sm text-muted-foreground">당첨 번호를 불러오는 중...</div>
-            </div>
-          </Card>
-        ) : winning ? (
-          <Card className="p-4 space-y-3">
-            <div className="flex justify-between items-center">
-              <h2 className="text-sm font-bold font-mono">당첨번호</h2>
-              <span className="text-xs text-muted-foreground font-mono">
-                제 {winning.round}회
-              </span>
-            </div>
-
+          {winning ? (
             <div className="flex gap-2 justify-center items-center">
               {winning.numbers.map((n: number, idx: number) => (
                 <LottoBall key={idx} number={n} />
@@ -267,8 +182,12 @@ export default function LottoSavingPage() {
               <span className="mx-1 text-muted-foreground">+</span>
               <LottoBall number={winning.bonus} />
             </div>
-          </Card>
-        ) : null}
+          ) : (
+            <div className="flex justify-center items-center h-9 text-sm text-muted-foreground">
+              {isDataLoading || isLatestLoading ? "당첨 번호를 불러오는 중..." : "당첨 번호가 없습니다."}
+            </div>
+          )}
+        </Card>
 
         {/* ✅ 정렬 옵션 */}
         {saved.length > 0 && (
@@ -299,16 +218,23 @@ export default function LottoSavingPage() {
           <div className="space-y-4">
             <div className="space-y-4">
               {paginated.map((item) => {
-                const borderClass = getCardBorder(item)
+                const rank = itemRank(item)
 
                 return (
-                  <Card key={item.id} className={`p-4 border-2 ${borderClass} transition-all`}>
+                  <Card key={item.id} className={`p-4 border-2 ${getRankColor(rank)} transition-all`}>
                     <div
                       className="flex justify-between items-center cursor-pointer"
                       onClick={() => toggleOpen(item.id)}
                     >
                       <p className="text-sm font-semibold">저장일: {item.date}</p>
-                      {openId === item.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                      <div className="flex items-center gap-2">
+                        {winning && (rank === "꽝" ? (
+                          <span className="text-xs text-muted-foreground">낙첨</span>
+                        ) : (
+                          <span className={`text-xs font-bold text-white px-2 py-0.5 rounded-full ${getRankBg(rank)}`}>{rank}</span>
+                        ))}
+                        {openId === item.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                      </div>
                     </div>
 
                     {openId === item.id && (
@@ -317,7 +243,7 @@ export default function LottoSavingPage() {
                           <LottoReceiptView
                             timestamp={item.date}
                             lottoSets={item.sets}
-                            getBorderColor={(row) => getRankColor(getRank(row))}
+                            getBorderColor={(row) => getRankColor(rankOf(row))}
                           />
                         </div>
 

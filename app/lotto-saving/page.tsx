@@ -70,8 +70,9 @@ export default function LottoSavingPage() {
     setSelectedRound(latestRound)
   }, [latest])
 
-  const getRank = (set: number[]) => {
-    if (!winning) return "꽝"
+  const getRank = (set: number[]) => (winning ? rankOf(set, winning) : "꽝")
+
+  const rankOf = (set: number[], winning: LottoResult) => {
     const match = set.filter((n) => winning.numbers.includes(n)).length
     const bonusMatch = set.includes(winning.bonus)
 
@@ -82,6 +83,22 @@ export default function LottoSavingPage() {
     if (match === 3) return "5등"
     return "꽝"
   }
+
+  const rankIndex = (rank: string) => lottoRanks.findIndex(r => r.label === rank)
+
+  // 최근 20회 전체에서 저장 번호의 최고 등수 (동률이면 최신 회차)
+  const bestInRecent = last50Rounds
+    .filter((w) => w.numbers)
+    .reduce<{ round: number; rank: string } | null>((best, w) => {
+      const rank = saved
+        .flatMap((item) => item.sets)
+        .map((set) => rankOf(set, w))
+        .reduce((a, b) => (rankIndex(a) <= rankIndex(b) ? a : b), "꽝")
+      if (rank === "꽝") return best
+      if (!best || rankIndex(rank) < rankIndex(best.rank)) return { round: w.round, rank }
+      if (rankIndex(rank) === rankIndex(best.rank) && w.round > best.round) return { round: w.round, rank }
+      return best
+    }, null)
 
   const getRankColor = (rank: string) =>
     lottoRanks.find(r => r.label === rank)?.color.split(" ")[1] || "border-gray-200"
@@ -152,6 +169,25 @@ export default function LottoSavingPage() {
           <h2 className="text-2xl font-bold">저장한 번호</h2>
           <p className="text-sm text-gray-500">회차별 당첨 결과를 확인해보세요!</p>
         </div>
+
+        {/* ✅ 최근 20회 최고 등수 */}
+        {saved.length > 0 && last50Rounds.length > 0 && (
+          <button
+            onClick={() => bestInRecent && setSelectedRound(bestInRecent.round)}
+            disabled={!bestInRecent}
+            className={`w-full flex justify-between items-center px-4 py-3 rounded-lg border-2 text-sm ${bestInRecent ? getRankColor(bestInRecent.rank) : "border-gray-200"}`}
+          >
+            <span className="text-muted-foreground">최근 20회 최고 등수</span>
+            {bestInRecent ? (
+              <span className="flex items-center gap-1 font-bold">
+                {bestInRecent.round}회 · {bestInRecent.rank}
+                <ChevronRight size={16} />
+              </span>
+            ) : (
+              <span className="text-muted-foreground">당첨 없음</span>
+            )}
+          </button>
+        )}
 
         {/* ✅ 회차 선택 */}
         <div className="flex justify-between items-center">

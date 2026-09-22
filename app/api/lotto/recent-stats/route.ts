@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server"
 
+export const revalidate = 600
+
 export async function GET() {
   try {
     const startDate = new Date("2002-12-07")

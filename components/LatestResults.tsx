@@ -4,15 +4,14 @@ import { useEffect, useState } from "react"
 import { LottoBall } from "./LottoBall"
 import { Card } from "@/components/ui/card"
 import { useLatestLotto } from "@/hooks/queries/useLatestLotto"
-import { useLottoStore } from "@/hooks/stores/useLottoStore"
+import type { LottoResult } from "@/hooks/stores/useLottoStore"
 import { bestRank, getRank } from "@/lib/checkRank"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 
 
-export function LatestResults() {
-  const { latestResult } = useLottoStore()
-  const {isLoading, isError } = useLatestLotto()
+export function LatestResults({ initial }: { initial?: LottoResult | null }) {
+  const { data: latestResult, isLoading, isError } = useLatestLotto(initial)
   const [savedSets, setSavedSets] = useState<number[][]>([])
 
   useEffect(() => {

@@ -1,53 +1,23 @@
-"use client"
-
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { LottoReceipt } from "@/components/LottoReceipt"
 import { LatestResults } from "@/components/LatestResults"
+import { LottoGenerator } from "@/components/LottoGenerator"
+import { fetchLatestLotto } from "@/lib/fetchLatestLotto"
 // import KakaoAd320x50 from "@/components/KakaoAd320x50"
 // import KakaoAd320x100 from "@/components/KakaoAd320x100"
 
-export default function Home() {
-  const [lottoSets, setLottoSets] = useState<number[][]>([])
-  const [isGenerating, setIsGenerating] = useState(false)
+// 최신 당첨번호를 HTML에 담아 정적으로 내려주고 10분마다 갱신
+export const revalidate = 600
 
-  const generateLottoNumbers = () => {
-    setIsGenerating(true)
-
-    setTimeout(() => {
-      const newSets: number[][] = []
-
-      for (let i = 0; i < 5; i++) {
-        const numbers = new Set<number>()
-        while (numbers.size < 6) {
-          numbers.add(Math.floor(Math.random() * 45) + 1)
-        }
-        newSets.push(Array.from(numbers).sort((a, b) => a - b))
-      }
-
-      setLottoSets(newSets)
-      setIsGenerating(false)
-    }, 500)
-  }
+export default async function Home() {
+  // 실패하면 null → 클라이언트에서 /api/lotto/latest로 다시 요청
+  const latest = await fetchLatestLotto().catch(() => null)
 
   return (
     <div className="py-8 px-4">
       <div className="max-w-md mx-auto space-y-8">
         {/* <KakaoAd320x50 /> */}
         <h1 className="sr-only">로또 6/45 번호 생성기</h1>
-        <LatestResults />
-        {lottoSets.length > 0 ? (
-          <LottoReceipt lottoSets={lottoSets} onGenerate={generateLottoNumbers} />
-        ) : (
-          <Button
-            onClick={generateLottoNumbers}
-            disabled={isGenerating}
-            className="w-full h-12 text-base font-mono"
-            size="lg"
-          >
-            {isGenerating ? "생성 중..." : "번호 생성하기"}
-          </Button>
-        )}
+        <LatestResults initial={latest} />
+        <LottoGenerator />
         {/* <KakaoAd320x100 /> */}
       </div>
     </div>

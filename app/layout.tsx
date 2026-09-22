@@ -3,10 +3,10 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import LottoNav from '@/components/LottoNav'
-import Script from 'next/script'
+// import Script from 'next/script'
 import { Providers } from './providers'
-import KakaoAd160x600Left from '@/components/KakaoAd160x600Left'
-import KakaoAd160x600Right from '@/components/KakaoAd160x600Right'
+// import KakaoAd160x600Left from '@/components/KakaoAd160x600Left'
+// import KakaoAd160x600Right from '@/components/KakaoAd160x600Right'
 
 const _geist = Geist({ subsets: ['latin'] })
 const _geistMono = Geist_Mono({ subsets: ['latin'] })
@@ -61,10 +61,7 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_ADSENSE_ID && (
             <meta name="google-adsense-account" content={process.env.NEXT_PUBLIC_ADSENSE_ID} />
         )}
-        <Script
-          src="//t1.daumcdn.net/kas/static/ba.min.js"
-          strategy="afterInteractive"
-        />
+        {/* <Script src="//t1.daumcdn.net/kas/static/ba.min.js" strategy="afterInteractive" /> */}
       </head>
 
       <body className="font-sans antialiased bg-gray-50">
@@ -73,7 +70,7 @@ export default function RootLayout({
             {/* 왼쪽 사이드 광고 (PC only - 1280px 이상) */}
             <aside className="hidden xl:block fixed left-0 top-0 h-screen p-4 z-10">
               <div className="sticky top-4">
-                <KakaoAd160x600Left />
+                {/* <KakaoAd160x600Left /> */}
               </div>
             </aside>
 
@@ -87,7 +84,7 @@ export default function RootLayout({
             {/* 오른쪽 사이드 광고 (PC only - 1280px 이상) */}
             <aside className="hidden xl:block fixed right-0 top-0 h-screen p-4 z-10">
               <div className="sticky top-4">
-                <KakaoAd160x600Right />
+                {/* <KakaoAd160x600Right /> */}
               </div>
             </aside>
           </div>

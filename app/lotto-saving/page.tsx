@@ -5,8 +5,8 @@ import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Crown, Trash2, Loade
 import { LottoReceiptView } from "@/components/LottoReceiptView"
 import { LottoActionButtons } from "@/components/LottoActionButtons"
 import { LottoBall } from "@/components/LottoBall"
-import KakaoAd320x50 from "@/components/KakaoAd320x50"
-import KakaoAd320x100 from "@/components/KakaoAd320x100"
+// import KakaoAd320x50 from "@/components/KakaoAd320x50"
+// import KakaoAd320x100 from "@/components/KakaoAd320x100"
 import { Card } from "@/components/ui/card"
 
 import { useLottoStore, LottoResult } from "@/hooks/stores/useLottoStore"
@@ -146,7 +146,7 @@ export default function LottoSavingPage() {
     <main className="min-h-screen bg-background py-8 px-4 mb-16">
       <div className="max-w-md mx-auto space-y-6">
 
-        <KakaoAd320x50 />
+        {/* <KakaoAd320x50 /> */}
 
         <div className="text-center space-y-1">
           <h2 className="text-2xl font-bold">저장한 번호</h2>
@@ -332,7 +332,7 @@ export default function LottoSavingPage() {
           </div>
         )}
 
-        <KakaoAd320x100 />
+        {/* <KakaoAd320x100 /> */}
       </div>
     </main>
   )

@@ -8,10 +8,10 @@ import { luckySpots, type LuckySpot } from "@/data/luckySpots"
 import { getDistance } from "@/lib/getDistance"
 import { loadKakaoMapScript } from "@/lib/loadKakaoMapScript"
 import { MapPin } from "lucide-react"
-import KakaoAd from "@/components/KakaoAd320x50"
-import KakaoAd2 from "@/components/KakaoAd320x100"
-import KakaoAd320x100 from "@/components/KakaoAd320x100"
-import KakaoAd320x50 from "@/components/KakaoAd320x50"
+// import KakaoAd from "@/components/KakaoAd320x50"
+// import KakaoAd2 from "@/components/KakaoAd320x100"
+// import KakaoAd320x100 from "@/components/KakaoAd320x100"
+// import KakaoAd320x50 from "@/components/KakaoAd320x50"
 
 export default function LuckyMapSection() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({
@@ -51,7 +51,7 @@ export default function LuckyMapSection() {
   return (
     <main className="min-h-screen bg-background py-8 px-4 mb-16">
       <div className="max-w-md mx-auto space-y-6">
-        <KakaoAd320x50 />
+        {/* <KakaoAd320x50 /> */}
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold text-foreground tracking-tight">행운 명당 지도</h2>
           <p className="text-sm text-muted-foreground">최근 1등 당첨 판매점 위치를 알려드릴게요!</p>
@@ -77,7 +77,7 @@ export default function LuckyMapSection() {
           <MapPin size={20} className="mr-2" />
           주변 명당 찾기
         </Button>
-       <KakaoAd320x100 />
+       {/* <KakaoAd320x100 /> */}
       </div>
     </main>
   )

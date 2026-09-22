@@ -18,7 +18,7 @@ export function LottoReceipt({ lottoSets, onGenerate }: LottoReceiptProps) {
   const { downloadImage, shareImage } = useLottoCapture(receiptRef)
   const router = useRouter()
 
-  // 새 번호가 생성되면 영수증과 버튼 줄이 함께 보이도록 하단에 맞춰 스크롤
+  // 새 번호가 생성되면 버튼 줄이 하단 고정 내비(LottoNav) 위에 보이도록 스크롤
   useEffect(() => {
     containerRef.current?.scrollIntoView({ behavior: "smooth", block: "end" })
   }, [lottoSets])
@@ -38,9 +38,9 @@ export function LottoReceipt({ lottoSets, onGenerate }: LottoReceiptProps) {
   }
 
   return (
-    <div ref={containerRef} className="scroll-mb-4" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+    <div ref={containerRef} className="scroll-mb-28" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       <div ref={receiptRef}>
-        <LottoReceiptView timestamp={timestamp} lottoSets={lottoSets} />
+        <LottoReceiptView lottoSets={lottoSets} />
       </div>
       <LottoActionButtons
         onDownload={downloadImage}

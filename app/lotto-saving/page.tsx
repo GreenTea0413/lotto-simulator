@@ -254,7 +254,6 @@ export default function LottoSavingPage() {
                       <div className="mt-3 space-y-4">
                         <div ref={receiptRef}>
                           <LottoReceiptView
-                            timestamp={item.date}
                             lottoSets={item.sets}
                             getBorderColor={(row) => getRankColor(rankOf(row))}
                           />

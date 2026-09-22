@@ -50,10 +50,7 @@ export default function LottoFrequencyChart() {
     <div className="w-full space-y-6">
       {/* Top 3 카드 */}
       <Card className="p-4 space-y-3">
-        <div className="flex flex-col space-y-1">
-          <h2 className="text-sm font-bold font-mono">가장 많이 나온 번호</h2>
-          <span className="text-xs text-muted-foreground font-mono">TOP 3 빈도 분석</span>
-        </div>
+        <h2 className="text-sm font-bold font-mono">가장 많이 나온 번호</h2>
         <div className="grid grid-cols-3 gap-3">
           {topNumbers.map((num, idx) => {
             const color = getNumberColor(num.number)
@@ -81,10 +78,7 @@ export default function LottoFrequencyChart() {
 
       {/* 출현 빈도 분포: 1~45 격자, 많이 나올수록 진하게 */}
       <Card className="p-4 space-y-3">
-        <div className="flex flex-col space-y-1">
-          <h2 className="text-sm font-bold font-mono">출현 빈도 분포</h2>
-          <span className="text-xs text-muted-foreground font-mono">숫자 1 ~ 45까지의 횟수 · 진할수록 많이 나옴</span>
-        </div>
+        <h2 className="text-sm font-bold font-mono">출현 빈도 분포</h2>
         <div className="grid grid-cols-9 gap-1.5">
           {recentStats.map((item) => {
             const color = getNumberColor(item.number)

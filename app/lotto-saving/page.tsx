@@ -125,9 +125,18 @@ export default function LottoSavingPage() {
 
         {/* <KakaoAd320x50 /> */}
 
-        <div className="text-center space-y-1">
-          <h2 className="text-2xl font-bold">내 번호</h2>
-          <p className="text-sm text-gray-500">회차별 당첨 결과를 확인해보세요!</p>
+        <h2 className="sr-only">내 번호</h2>
+
+        {/* ✅ 등수별 색상 */}
+        <div className="flex justify-center gap-3 text-xs">
+          {lottoRanks
+            .filter((r) => r.label !== "꽝")
+            .map((rank) => (
+              <div key={rank.label} className="flex items-center gap-1">
+                <span className={`w-2.5 h-2.5 rounded-full ${getRankBg(rank.label)}`} />
+                <span>{rank.label}</span>
+              </div>
+            ))}
         </div>
 
         {/* ✅ 최근 20회 최고 등수 */}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { LottoReceiptView } from "./LottoReceiptView"
@@ -15,11 +15,6 @@ export function LottoReceipt({ lottoSets }: LottoReceiptProps) {
   const receiptRef = useRef<HTMLDivElement>(null)
   const { downloadImage, shareImage } = useLottoCapture(receiptRef)
   const router = useRouter()
-
-  // 새 번호가 생성되면 영수증으로 스크롤
-  useEffect(() => {
-    receiptRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-  }, [lottoSets])
 
   const timestamp =
     new Date().toLocaleDateString("ko-KR") +
@@ -37,7 +32,7 @@ export function LottoReceipt({ lottoSets }: LottoReceiptProps) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-      <div ref={receiptRef} className="scroll-mt-20">
+      <div ref={receiptRef}>
         <LottoReceiptView timestamp={timestamp} lottoSets={lottoSets} />
       </div>
       <LottoActionButtons

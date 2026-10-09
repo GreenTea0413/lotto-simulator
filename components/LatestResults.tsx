@@ -15,8 +15,13 @@ export function LatestResults({ initial }: { initial?: LottoResult | null }) {
   const [savedSets, setSavedSets] = useState<number[][]>([])
 
   useEffect(() => {
-    const saved: { sets: number[][] }[] = JSON.parse(localStorage.getItem("savedLotto") || "[]")
-    setSavedSets(saved.flatMap((item) => item.sets))
+    const load = () => {
+      const saved: { sets: number[][] }[] = JSON.parse(localStorage.getItem("savedLotto") || "[]")
+      setSavedSets(saved.flatMap((item) => item.sets))
+    }
+    load()
+    window.addEventListener("savedLotto", load)
+    return () => window.removeEventListener("savedLotto", load)
   }, [])
 
   if (isLoading) {

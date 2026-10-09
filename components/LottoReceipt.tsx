@@ -32,6 +32,8 @@ export function LottoReceipt({ lottoSets, onGenerate }: LottoReceiptProps) {
     const saved = JSON.parse(localStorage.getItem("savedLotto") || "[]")
     const newEntry = { id: Date.now(), date: timestamp, sets: lottoSets }
     localStorage.setItem("savedLotto", JSON.stringify([...saved, newEntry]))
+    // 같은 화면의 LatestResults가 저장 결과를 바로 반영하도록 알림
+    window.dispatchEvent(new Event("savedLotto"))
     toast.success("번호를 저장했어요", {
       action: { label: "내 번호 보기", onClick: () => router.push("/lotto-saving") },
     })
